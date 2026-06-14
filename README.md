@@ -273,17 +273,33 @@ Searching for Ambient (ark) rootkit...                      not found
 Searching for suspicious files and dirs...                  WARNING
 
 WARNING: The following suspicious files and directories were found:
-/usr/lib/systemd/.systemd_9cc66253 [Not from a Debian package]
-/usr/lib/systemd/.systemd_9cc66253/.config [Not from a Debian package]
-/usr/lib/systemd/.systemd_9cc66253/.token [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.mod.cmd [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.mod.o.cmd [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.ko.cmd [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/..module-common.o.cmd [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.module-common.o [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.Module.symvers.cmd [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.o.cmd [Not from a Debian package]
-/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.modules.order.cmd [Not from a Debian package]
+/usr/lib/caido/resources/app.asar.unpacked/node_modules/registry-js/.prettierignore [From Debian package: caido]
+/usr/lib/pwndbg/exe/.skip-venv [From Debian package: pwndbg]
+/usr/lib/debug/.build-id [From Debian package: libc6-dbg:amd64]
+/usr/lib/firmware/ath11k/QCN9074/hw1.0/.notice [From Debian package: firmware-atheros]
+/usr/lib/firmware/b43/.placeholder [From Debian package: firmware-b43-installer]
+/usr/lib/firmware/b43legacy/.placeholder [From Debian package: firmware-b43legacy-installer]
+/usr/lib/mono/xbuild-frameworks/.NETFramework [From Debian package: mono-xbuild]
+/usr/lib/mono/xbuild-frameworks/.NETPortable [From Debian package: mono-xbuild]
+/usr/lib/mono/xbuild-frameworks/.NETPortable/v5.0/SupportedFrameworks/.NET Framework 4.6.xml [From Debian package: mono-xbuild]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/net-protocol/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/securerandom/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/timeout/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/molinillo/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/tsort/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/resolv/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/optparse/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/uri/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/vendor/net-http/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/.document [From Debian package: ruby-rubygems]
+/usr/lib/ruby/gems/3.1.0/gems/typeprof-0.21.2/vscode/.vscode [From Debian package: libruby3.1t64:amd64]
+/usr/lib/ruby/gems/3.1.0/gems/typeprof-0.21.2/vscode/.gitignore [From Debian package: libruby3.1t64:amd64]
+/usr/lib/ruby/gems/3.1.0/gems/typeprof-0.21.2/vscode/.vscodeignore [From Debian package: libruby3.1t64:amd64]
+/usr/lib/hashcat/bridges/.gitkeep [From Debian package: hashcat]
+/usr/lib/hashcat/modules/.gitkeep [From Debian package: hashcat]
+/usr/lib/jvm/.java-1.25.0-openjdk-amd64.jinfo [From Debian package: openjdk-25-jre-headless:amd64]
+/usr/lib/jvm/.java-1.11.0-openjdk-amd64.jinfo [From Debian package: openjdk-11-jre-headless:amd64]
+/usr/lib/jvm/.java-1.21.0-openjdk-amd64.jinfo [From Debian package: openjdk-21-jre-headless:amd64]
 
 Searching for LPD Worm...                                   not found
 Searching for Ramen Worm rootkit...                         not found
@@ -363,24 +379,17 @@ WARNING: Output from ifpromisc:
 docker0: not promisc and no packet sniffer sockets
 eth0: not promisc and no packet sniffer sockets
 lo: not promisc and no packet sniffer sockets
-wlan0: PACKET SNIFFER(/usr/sbin/NetworkManager[1131], /usr/sbin/wpa_supplicant[1133])
+wlan0: PACKET SNIFFER(/usr/sbin/NetworkManager[1116], /usr/sbin/wpa_supplicant[1120])
+Unknown interface(s): PACKET SNIFFER(/usr/sbin/wpa_supplicant[1120])
 
 Checking `w55808'...                                        not found
 Checking `wted'...                                          WARNING
-
-WARNING: output from chkwtmp:
-1 deletion(s) between Sun May 31 12:23:17 2026 and Sun May 31 12:42:47 2026
-[TRUNCATED - 50+ deletion entries]
-
 Checking `scalper'...                                       not found
 Checking `slapper'...                                       not found
 Checking `z2'...                                            WARNING
-
-WARNING: output from chklastlog:
-user root deleted or never logged from lastlog!
-
 Checking `chkutmp'...                                       not found
 Checking `OSX_RSPLUG'...                                    not tested
+
 
 
 ```
