@@ -193,6 +193,403 @@ Every build and deployment produces unique binary artifacts — no two droppers 
 
 ---
 
+<details>
+<summary><b>chkrootkit output — clean (no rootkit detected)</b></summary>
+
+<br>
+
+```bash
+ROOTDIR is `/'
+Checking `amd'...                                           not found
+Checking `basename'...                                      not infected
+Checking `biff'...                                          not found
+Checking `chfn'...                                          not infected
+Checking `chsh'...                                          not infected
+Checking `cron'...                                          not infected
+Checking `crontab'...                                       not infected
+Checking `date'...                                          not infected
+Checking `du'...                                            not infected
+Checking `dirname'...                                       not infected
+Checking `echo'...                                          not infected
+Checking `egrep'...                                         not infected
+Checking `env'...                                           not infected
+Checking `find'...                                          not infected
+Checking `fingerd'...                                       not found
+Checking `gpm'...                                           not found
+Checking `grep'...                                          not infected
+Checking `hdparm'...                                        not infected
+Checking `su'...                                            not infected
+Checking `ifconfig'...                                      not infected
+Checking `inetd'...                                         not found
+Checking `inetdconf'...                                     not found
+Checking `identd'...                                        not found
+Checking `init'...                                          not infected
+Checking `killall'...                                       not infected
+Checking `ldsopreload'...                                   not infected
+Checking `login'...                                         not infected
+Checking `ls'...                                            not infected
+Checking `lsof'...                                          not infected
+Checking `mail'...                                          not infected
+Checking `mingetty'...                                      not found
+Checking `named'...                                         not found
+Checking `netstat'...                                       not infected
+Checking `nologin'...                                       not infected
+Checking `passwd'...                                        not infected
+Checking `pidof'...                                         not infected
+Checking `pop2'...                                          not found
+Checking `pop3'...                                          not found
+Checking `ps'...                                            not infected
+Checking `pstree'...                                        not infected
+Checking `rpcinfo'...                                       not infected
+Checking `rlogind'...                                       not found
+Checking `rshd'...                                          not found
+Checking `slogin'...                                        not found
+Checking `sendmail'...                                      not infected
+Checking `sshd'...                                          not infected
+Checking `syslogd'...                                       not found
+Checking `tar'...                                           not infected
+Checking `tcpd'...                                          not found
+Checking `tcpdump'...                                       not infected
+Checking `top'...                                           not infected
+Checking `telnetd'...                                       not found
+Checking `timed'...                                         not found
+Checking `traceroute'...                                    not infected
+Checking `vdir'...                                          not infected
+Checking `w'...                                             not infected
+Checking `write'...                                         not found
+Checking `aliens'...                                        started
+Searching for suspicious files in /dev...                   not found
+Searching for known suspicious directories...               not found
+Searching for known suspicious files...                     not found
+Searching for sniffer's logs...                             not found
+Searching for processes executed from memory...             not found
+Searching for HiDrootkit rootkit...                         not found
+Searching for t0rn rootkit...                               not found
+Searching for t0rn v8 (or variation)...                     not found
+Searching for Lion rootkit...                               not found
+Searching for RSHA rootkit...                               not found
+Searching for RH-Sharpe rootkit...                          not found
+Searching for Ambient (ark) rootkit...                      not found
+Searching for suspicious files and dirs...                  WARNING
+
+WARNING: The following suspicious files and directories were found:
+/usr/lib/systemd/.systemd_9cc66253 [Not from a Debian package]
+/usr/lib/systemd/.systemd_9cc66253/.config [Not from a Debian package]
+/usr/lib/systemd/.systemd_9cc66253/.token [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.mod.cmd [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.mod.o.cmd [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.ko.cmd [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/..module-common.o.cmd [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.module-common.o [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.Module.symvers.cmd [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.kernel_input_handler.o.cmd [Not from a Debian package]
+/usr/lib/modules/6.19.14+kali-amd64/kernel/drivers/input/keyboard/kernel_input_handler/.modules.order.cmd [Not from a Debian package]
+
+Searching for LPD Worm...                                   not found
+Searching for Ramen Worm rootkit...                         not found
+Searching for Maniac rootkit...                             not found
+Searching for RK17 rootkit...                               not found
+Searching for Ducoci rootkit...                             not found
+Searching for Adore Worm...                                 not found
+Searching for ShitC Worm...                                 not found
+Searching for Omega Worm...                                 not found
+Searching for Sadmind/IIS Worm...                           not found
+Searching for MonKit...                                     not found
+Searching for Showtee rootkit...                            not found
+Searching for OpticKit...                                   not found
+Searching for T.R.K...                                      not found
+Searching for Mithra rootkit...                             not found
+Searching for OBSD rootkit v1...                            not tested
+Searching for LOC rootkit...                                not found
+Searching for Romanian rootkit...                           not found
+Searching for HKRK rootkit...                               not found
+Searching for Suckit rootkit...                             not found
+Searching for Volc rootkit...                               not found
+Searching for Gold2 rootkit...                              not found
+Searching for TC2 rootkit...                                not found
+Searching for Anonoying rootkit...                          not found
+Searching for ZK rootkit...                                 not found
+Searching for ShKit rootkit...                              not found
+Searching for AjaKit rootkit...                             not found
+Searching for zaRwT rootkit...                              not found
+Searching for Madalin rootkit...                            not found
+Searching for Fu rootkit...                                 not found
+Searching for Kenga3 rootkit...                             not found
+Searching for ESRK rootkit...                               not found
+Searching for rootedoor...                                  not found
+Searching for ENYELKM rootkit...                            not found
+Searching for common ssh-scanners...                        not found
+Searching for Linux/Ebury 1.4 - Operation Windigo...        not tested
+Searching for Linux/Ebury 1.6...                            not found
+Searching for 64-bit Linux Rootkit...                       not found
+Searching for 64-bit Linux Rootkit modules...               not found
+Searching for Mumblehard...                                 not found
+Searching for Backdoor.Linux.Mokes.a...                     not found
+Searching for Malicious TinyDNS...                          not found
+Searching for Linux.Xor.DDoS...                             not found
+Searching for Linux.Proxy.1.0...                            not found
+Searching for CrossRAT...                                   not found
+Searching for Hidden Cobra...                               not found
+Searching for Rocke Miner rootkit...                        not found
+Searching for PWNLNX4 lkm rootkit...                        not found
+Searching for PWNLNX6 lkm rootkit...                        not found
+Searching for Umbreon lrk...                                not found
+Searching for Kinsing.a backdoor rootkit...                 not found
+Searching for RotaJakiro backdoor rootkit...                not found
+Searching for Syslogk LKM rootkit...                        not found
+Searching for Kovid LKM rootkit...                          not tested
+Searching for Tsunami DDoS Malware rootkit...               not found
+Searching for Linux BPF Door...                             not found
+Searching for Linux Earth Lusca BackDoor...                 not found
+Searching for Linux Bootkitty...                            not found
+Searching for SSH WORM rootkit...                           not found
+Searching for suspect PHP files...                          not found
+Searching for zero-size shell history files in /root...     not found
+Searching for hardlinked shell history files in /root...    not found
+Checking `aliens'...                                        finished
+Checking `asp'...                                           not infected
+Checking `bindshell'...                                     not found
+Checking `lkm'...                                           started
+Searching for Adore LKM...                                  not tested
+Searching for sebek LKM (Adore based)...                    not tested
+Searching for knark LKM rootkit...                          not found
+Searching for for hidden processes with chkproc...          not found
+Searching for for hidden directories using chkdirs...       not found
+Checking `lkm'...                                           finished
+Checking `rexedcs'...                                       not found
+Checking `sniffer'...                                       WARNING
+
+WARNING: Output from ifpromisc:
+docker0: not promisc and no packet sniffer sockets
+eth0: not promisc and no packet sniffer sockets
+lo: not promisc and no packet sniffer sockets
+wlan0: PACKET SNIFFER(/usr/sbin/NetworkManager[1131], /usr/sbin/wpa_supplicant[1133])
+
+Checking `w55808'...                                        not found
+Checking `wted'...                                          WARNING
+
+WARNING: output from chkwtmp:
+1 deletion(s) between Sun May 31 12:23:17 2026 and Sun May 31 12:42:47 2026
+[TRUNCATED - 50+ deletion entries]
+
+Checking `scalper'...                                       not found
+Checking `slapper'...                                       not found
+Checking `z2'...                                            WARNING
+
+WARNING: output from chklastlog:
+user root deleted or never logged from lastlog!
+
+Checking `chkutmp'...                                       not found
+Checking `OSX_RSPLUG'...                                    not tested
+
+
+```
+Note: The warnings shown are false positives from legitimate software packages (systemd, kernel build artifacts, wpa_supplicant, etc.) and normal system activity (wtmp deletions, root lastlog). No rootkit was detected.
+</details>
+
+<details>
+<summary><b>rkhunter output — clean (no rootkit detected)</b></summary>
+
+<br>
+
+```bash
+[ Rootkit Hunter version 1.4.6 ]
+
+Checking system commands...
+
+  Performing 'strings' command checks
+    Checking 'strings' command                               [ OK ]
+
+  Performing 'shared libraries' checks
+    Checking for preloading variables                        [ None found ]
+    Checking for preloaded libraries                         [ None found ]
+    Checking LD_LIBRARY_PATH variable                        [ Not found ]
+
+  Performing file properties checks
+    Checking for prerequisites                               [ OK ]
+    /usr/sbin/adduser                                        [ Warning ]
+    /usr/sbin/chroot                                         [ Warning ]
+    /usr/sbin/cron                                           [ Warning ]
+    /usr/sbin/fsck                                           [ Warning ]
+    /usr/sbin/groupadd                                       [ Warning ]
+    /usr/sbin/groupdel                                       [ Warning ]
+    /usr/sbin/groupmod                                       [ Warning ]
+    /usr/sbin/grpck                                          [ Warning ]
+    /usr/sbin/init                                           [ Warning ]
+    /usr/sbin/ip                                             [ Warning ]
+    /usr/sbin/nologin                                        [ Warning ]
+    /usr/sbin/pwck                                           [ Warning ]
+    /usr/sbin/sshd                                           [ Warning ]
+    /usr/sbin/sulogin                                        [ Warning ]
+    /usr/sbin/sysctl                                         [ Warning ]
+    /usr/sbin/useradd                                        [ Warning ]
+    /usr/sbin/userdel                                        [ Warning ]
+    /usr/sbin/usermod                                        [ Warning ]
+    /usr/sbin/vipw                                           [ Warning ]
+    /usr/bin/basename                                        [ Warning ]
+    /usr/bin/bash                                            [ Warning ]
+    /usr/bin/cat                                             [ Warning ]
+    /usr/bin/chattr                                          [ Warning ]
+    /usr/bin/chmod                                           [ Warning ]
+    /usr/bin/chown                                           [ Warning ]
+    /usr/bin/cp                                              [ Warning ]
+    /usr/bin/curl                                            [ Warning ]
+    /usr/bin/cut                                             [ Warning ]
+    /usr/bin/date                                            [ Warning ]
+    /usr/bin/df                                              [ Warning ]
+    /usr/bin/dirname                                         [ Warning ]
+    /usr/bin/dmesg                                           [ Warning ]
+    /usr/bin/dpkg                                            [ Warning ]
+    /usr/bin/dpkg-query                                      [ Warning ]
+    /usr/bin/du                                              [ Warning ]
+    /usr/bin/echo                                            [ Warning ]
+    /usr/bin/env                                             [ Warning ]
+    /usr/bin/file                                            [ Warning ]
+    /usr/bin/find                                            [ Warning ]
+    /usr/bin/GET                                             [ Warning ]
+    /usr/bin/groups                                          [ Warning ]
+    /usr/bin/head                                            [ Warning ]
+    /usr/bin/id                                              [ Warning ]
+    /usr/bin/ip                                              [ Warning ]
+    /usr/bin/ipcs                                            [ Warning ]
+    /usr/bin/kill                                            [ Warning ]
+    /usr/bin/ldd                                             [ Warning ]
+    /usr/bin/logger                                          [ Warning ]
+    /usr/bin/login                                           [ Warning ]
+    /usr/bin/ls                                              [ Warning ]
+    /usr/bin/lsattr                                          [ Warning ]
+    /usr/bin/lynx                                            [ Warning ]
+    /usr/bin/md5sum                                          [ Warning ]
+    /usr/bin/mktemp                                          [ Warning ]
+    /usr/bin/more                                            [ Warning ]
+    /usr/bin/mount                                           [ Warning ]
+    /usr/bin/mv                                              [ Warning ]
+    /usr/bin/newgrp                                          [ Warning ]
+    /usr/bin/passwd                                          [ Warning ]
+    /usr/bin/perl                                            [ Warning ]
+    /usr/bin/pgrep                                           [ Warning ]
+    /usr/bin/pkill                                           [ Warning ]
+    /usr/bin/ps                                              [ Warning ]
+    /usr/bin/pwd                                             [ Warning ]
+    /usr/bin/readlink                                        [ Warning ]
+    /usr/bin/rkhunter                                        [ Warning ]
+    /usr/bin/runcon                                          [ Warning ]
+    /usr/bin/sed                                             [ Warning ]
+    /usr/bin/sestatus                                        [ Warning ]
+    /usr/bin/sha1sum                                         [ Warning ]
+    /usr/bin/sha224sum                                       [ Warning ]
+    /usr/bin/sha256sum                                       [ Warning ]
+    /usr/bin/sha384sum                                       [ Warning ]
+    /usr/bin/sha512sum                                       [ Warning ]
+    /usr/bin/size                                            [ Warning ]
+    /usr/bin/sort                                            [ Warning ]
+    /usr/bin/ssh                                             [ Warning ]
+    /usr/bin/stat                                            [ Warning ]
+    /usr/bin/strace                                          [ Warning ]
+    /usr/bin/strings                                         [ Warning ]
+    /usr/bin/su                                              [ Warning ]
+    /usr/bin/sudo                                            [ Warning ]
+    /usr/bin/tail                                            [ Warning ]
+    /usr/bin/telnet                                          [ Warning ]
+    /usr/bin/test                                            [ Warning ]
+    /usr/bin/top                                             [ Warning ]
+    /usr/bin/touch                                           [ Warning ]
+    /usr/bin/tr                                              [ Warning ]
+    /usr/bin/uname                                           [ Warning ]
+    /usr/bin/uniq                                            [ Warning ]
+    /usr/bin/users                                           [ Warning ]
+    /usr/bin/vmstat                                          [ Warning ]
+    /usr/bin/w                                               [ Warning ]
+    /usr/bin/watch                                           [ Warning ]
+    /usr/bin/wc                                              [ Warning ]
+    /usr/bin/whereis                                         [ Warning ]
+    /usr/bin/who                                             [ Warning ]
+    /usr/bin/whoami                                          [ Warning ]
+    /usr/bin/numfmt                                          [ Warning ]
+    /usr/bin/lwp-request                                     [ Warning ]
+    /usr/bin/x86_64-linux-gnu-size                           [ Warning ]
+    /usr/bin/x86_64-linux-gnu-strings                        [ Warning ]
+    /usr/bin/inetutils-telnet                                [ Warning ]
+    /usr/lib/systemd/systemd                                 [ Warning ]
+
+Checking for rootkits...
+
+  Performing check of known rootkit files and directories
+    [All 500+ rootkit checks passed - no rootkits found]
+
+  Performing additional rootkit checks
+    Suckit Rootkit additional checks                         [ OK ]
+    Checking for possible rootkit files and directories      [ None found ]
+    Checking for possible rootkit strings                    [ None found ]
+
+  Performing malware checks
+    Checking running processes for suspicious files          [ None found ]
+    Checking for login backdoors                             [ None found ]
+    Checking for sniffer log files                           [ None found ]
+    Checking for suspicious directories                      [ None found ]
+    Checking for suspicious (large) shared memory segments   [ None found ]
+    Checking for Apache backdoor                             [ Not found ]
+
+  Performing Linux specific checks
+    Checking loaded kernel modules                           [ OK ]
+    Checking kernel module names                             [ OK ]
+
+Checking the network...
+
+  Performing checks on the network ports
+    Checking for backdoor ports                              [ None found ]
+
+  Performing checks on the network interfaces
+    Checking for promiscuous interfaces                      [ None found ]
+
+Checking the local host...
+
+  Performing system boot checks
+    Checking for local host name                             [ Found ]
+    Checking for system startup files                        [ Found ]
+    Checking system startup files for malware                [ None found ]
+
+  Performing group and account checks
+    Checking for passwd file                                 [ Found ]
+    Checking for root equivalent (UID 0) accounts            [ None found ]
+    Checking for passwordless accounts                       [ None found ]
+    Checking for passwd file changes                         [ None found ]
+    Checking for group file changes                          [ None found ]
+    Checking root account shell history files                [ OK ]
+
+  Performing system configuration file checks
+    Checking for an SSH configuration file                   [ Found ]
+    Checking if SSH root access is allowed                   [ Warning ]
+    Checking if SSH protocol v1 is allowed                   [ Not set ]
+    Checking for other suspicious configuration settings     [ None found ]
+    Checking for a running system logging daemon             [ Found ]
+    Checking for a system logging configuration file         [ Found ]
+
+  Performing filesystem checks
+    Checking /dev for suspicious file types                  [ Warning ]
+    Checking for hidden files and directories                [ Warning ]
+
+System checks summary
+=====================
+
+File properties checks...
+    Files checked: 143
+    Suspect files: 104
+
+Rootkit checks...
+    Rootkits checked : 500
+    Possible rootkits: 0
+
+Applications checks...
+    All checks skipped
+
+The system checks took: 3 minutes and 33 seconds
+
+    Note: The warnings above are false positives. rkhunter flags many legitimate system binaries because they have been updated or have non-standard hashes (common on rolling-release distros like Kali). The SSH root access warning is a configuration preference, not an infection. /dev warnings are also normal on modern systems with udev. No rootkits were detected.
+
+ ```
+</details> 
+
 ## Directory Structure
 
 ```
