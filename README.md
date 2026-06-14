@@ -389,9 +389,6 @@ Checking `slapper'...                                       not found
 Checking `z2'...                                            WARNING
 Checking `chkutmp'...                                       not found
 Checking `OSX_RSPLUG'...                                    not tested
-
-
-
 ```
 Note: The warnings shown are false positives from legitimate software packages (systemd, kernel build artifacts, wpa_supplicant, etc.) and normal system activity (wtmp deletions, root lastlog). No rootkit was detected.
 </details>
@@ -593,10 +590,16 @@ Applications checks...
     All checks skipped
 
 The system checks took: 3 minutes and 33 seconds
-
-    Note: The warnings above are false positives. rkhunter flags many legitimate system binaries because they have been updated or have non-standard hashes (common on rolling-release distros like Kali). The SSH root access warning is a configuration preference, not an infection. /dev warnings are also normal on modern systems with udev. No rootkits were detected.
-
  ```
+Note: The warnings above are false positives. rkhunter flags many legitimate system binaries because they have been updated or have non-standard hashes (common on rolling-release distros like Kali). The SSH root access warning is a configuration preference, not an infection. /dev warnings are also normal on modern systems with udev. No rootkits were detected.
+
+</details> 
+
+<details>
+<summary><b>unhide output — clean (no rootkit detected)</b></summary>
+
+<br>
+<img width="491" height="189" alt="Screenshot_20260615_001136" src="https://github.com/user-attachments/assets/cb4adbd4-3ca8-40a2-bfc4-d1b004c514fa" />
 </details> 
 
 ## Directory Structure
