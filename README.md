@@ -4,7 +4,7 @@
 </p>
 
 <h1 align="center">XUAN</h1>
-<p align="center"><code>Linux 4.17–6.x · x86_64 · ftrace hooks (24) · Google C2 · Zero non-Google traffic · Self-rebuilds on kernel upgrade · Evades chkrootkit/rkhunter/unhide</code></p>
+<p align="center"><code>Kernel-level Linux rootkit · 4.17–6.x · x86_64 · ftrace hooks (24) · Google C2 · Zero non-Google traffic · Self-rebuilds on kernel upgrade · Evades chkrootkit, rkhunter, and unhide</code></p>
 
 ## DESCRIPTION
 
