@@ -14,12 +14,11 @@ The rootkit binary masquerades as a legitimate system component, blending into t
 
 Command-and-control runs entirely over Google's infrastructure. The rootkit uses a randomized beacon — sleeping for a configurable interval between polls, then waking to check a shared Google Calendar for encrypted commands embedded in event descriptions. Responses and exfiltrated data flow back through Google Drive. All auxiliary downloads — including the browser extraction binary — are served from Google Drive as well. There are no listening ports, no custom TCP protocols, no DNS tunneling, no direct operator-to-target connections. Every single packet from the rootkit goes to a `google.com` or `googleapis.com` address, indistinguishable from routine browser traffic to Google services. Between beacon cycles, the rootkit generates zero network traffic — complete radio silence.
 
-**What can it do?** Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction (passwords, cookies, autofill), Discord token harvesting, webcam capture, screen capture, microphone recording, SSH key and known_hosts exfiltration, crypto wallet discovery (40+ wallet paths), WiFi password extraction, clipboard monitoring, shell history collection, and a kernel-level keylogger that captures keystrokes before they reach userspace.
+**What can it do?** Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction, Discord token harvesting, webcam/microphone/screen capture, SSH key and known_hosts exfiltration, crypto wallet discovery (40+ paths), WiFi password extraction, clipboard monitoring, shell history collection, process enumeration, network connection listing, environment variable extraction, cloud credential theft (AWS/GCP/Azure/K8s), SSH agent key hijacking, mount/disk enumeration, and a kernel-level keylogger that captures keystrokes before they reach userspace — automatically tagging each line with the foreground process to identify passwords.
 
 **How does it stay hidden?** Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to `find`, `ls`, `ps`, `top`, `netstat`, and any EDR scanning `/proc`. Rootkit detection tools — including **chkrootkit**, **rkhunter**, and **unhide** — return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether `/lib` is a symlink to `/usr/lib` or not.
 
 **Persistence** is handled through a hidden startup entry that sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF — no dependencies, no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable.
-
 
 ---
 
@@ -101,7 +100,6 @@ flowchart TB
     Evasion --> UNHIDE
 ```
 
-
 ## Features
 
 ### C2 Commands
@@ -121,7 +119,13 @@ flowchart TB
 | `dump_history` | Collect shell history (bash, zsh, ksh, fish) |
 | `dump_ssh` | Exfil SSH keys and known_hosts |
 | `dump_crypto` | Scan for and exfil crypto wallet files (40+ paths) |
-| `keylog dump` | Dump captured keystrokes (XOR-encrypted, auto-starts with module) |
+| `dump_mounts` | List mounted filesystems, disk usage, and physical disks |
+| `dump_processes` | Enumerate running processes with PID, user, and command line |
+| `dump_netstat` | List active network connections (TCP/UDP, IPv4/IPv6) |
+| `dump_env` | Extract sensitive environment variables (keys, tokens, passwords) |
+| `dump_cloud` | Extract cloud credentials (AWS, GCP, Azure, K8s, Docker, Terraform) |
+| `dump_ssh_agent` | List unlocked keys from running SSH agents |
+| `keylog dump` | Dump captured keystrokes (process-tagged — passwords labeled with process name) |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
 | `takeover` | Switch rootkit to different C2 calendar |
@@ -138,9 +142,8 @@ flowchart TB
 - **nlink deception** — `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration
 - **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `XUAN_core`
 - **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to XUAN, rootkit, or keylogger
-- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace, XOR-encrypted with a machine-derived key (survives kernel upgrades), output stored on disk inside already-hidden directory, persists across reboots
+- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. Each line is tagged with the foreground process name (e.g. `[sudo]`, `[ssh]`) — passwords are automatically labeled. XOR-encrypted with a machine-derived key; survives kernel upgrades. Output stored on disk inside already-hidden directory.
 - **Anti-debug** — debugger attachment blocked on rootkit process via ptrace hook
-- **finit_module hook** — pass-through (no longer blocks module loads); WiFi drivers and legitimate kernel modules load normally
 - **`/proc/<pid>/fd` hidden** — open file descriptors invisible, preventing enumeration of keylogger output and config files
 - **Module retry** — auto-retries kernel module load if initial attempt fails
 - **Auto-load on boot** — loads automatically on startup, no manual intervention needed
@@ -183,7 +186,7 @@ Every build and deployment produces unique binary artifacts — no two droppers 
 | Dropper encryption key | Per-build | 32-byte XOR key for module source tarball randomized every controller compilation |
 | Rootkit binary encryption | Per-build | Full rootkit binary XOR-encrypted before embedding; dropper decrypts on extraction with per-build key |
 | Compiler flag jitter | Per-machine | Random optimization level (`-Os`/`-O2`/`-O3`) plus random alignment flags per target |
-| ELF section mutation | Per-machine | Random `.comment` section appended to compiled `.ko` with per-machine ID |
+| ELF section mutation | Per-machine | Random `.comment` section appended to compiled `.ko` with per-machine poly ID |
 | Build path randomization | Per-machine | Randomized `TMPDIR` prevents reproducible build paths |
 
 **Result:** Every controller build produces a unique dropper. Every machine deployment produces a unique kernel module. No two artifacts anywhere share an MD5/SHA256 hash.
@@ -221,11 +224,12 @@ src/
     msg_to_user.h       Netlink message struct (kernel → userspace)
     Makefile            Kernel module build
 data_exfil.json         Exfiltration module configuration
-dedsec_xuan.py          Python controller (C2 operator interface)
+dedsec_xuan.py      Python controller (C2 operator interface)
 c2_creds.json           Controller credentials
 ```
 
 ---
+
 ## Build
 
 ### Prerequisites
