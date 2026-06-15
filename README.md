@@ -195,6 +195,8 @@ Every build and deployment produces unique binary artifacts — no two droppers 
 
 ---
 
+### Anti-Rootkit Result:
+
 <details>
 <summary><b>chkrootkit output — clean (no rootkit detected)</b></summary>
 
@@ -603,43 +605,6 @@ Note: The warnings above are false positives. rkhunter flags many legitimate sys
 <br>
 <img width="491" height="189" alt="Screenshot_20260615_001136" src="https://github.com/user-attachments/assets/cb4adbd4-3ca8-40a2-bfc4-d1b004c514fa" />
 </details> 
-
-## Directory Structure
-
-```
-src/
-  main.cpp              Rootkit entry point, C2 loop, command dispatcher
-  crypto.cpp/hpp        Encryption (XOR + HMAC-SHA256)
-  http.cpp/hpp          Raw HTTPS client (OpenSSL)
-  network.cpp/hpp       STUN IP discovery, HTTP helpers
-  drive.cpp/hpp         Google Drive API client
-  system.cpp/hpp        System info gathering
-  modules.cpp/hpp       Command implementations (browser, camera, audio, etc.)
-  stealth.cpp/hpp       Kernel module loader, netlink communication, kallsyms resolver
-  obfuscated.hpp        XOR-obfuscated strings
-  dropper.cpp           Standalone installer binary
-  machine_names.h       Machine-specific FNV-1a hash name generator
-  CMakeLists.txt        Build config
-  kernel_module/        Kernel module source
-    module.c            Main module (16 syscall hooks, 4 net hooks, 5 self-defense hooks)
-    chars_trie.c/h      Trie data structure for hidden paths
-    hidden_paths.c/h    Path hiding logic and trie queries
-    hidden_tcp_ports.c/h TCP/UDP port hiding
-    hide_module.c/h     Hide from lsmod and /sys/module
-    communicate.c/h     Netlink communication + merged-usr path auto-variants
-    selfdefense.c       kprobe/kallsyms/find_module/bpf/__module_address hooks
-    keylogger.c         Kernel-level keyboard input capture (built into XUAN_core)
-    ftrace_helper.h     Ftrace hook installation helpers
-    operations_protocol.h Netlink message IDs
-    msg_to_module.h     Netlink message struct (userspace → kernel)
-    msg_to_user.h       Netlink message struct (kernel → userspace)
-    Makefile            Kernel module build
-data_exfil.json         Exfiltration module configuration
-dedsec_xuan.py      Python controller (C2 operator interface)
-c2_creds.json           Controller credentials
-```
-
----
 
 ## Build
 
