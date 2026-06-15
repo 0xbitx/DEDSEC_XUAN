@@ -14,7 +14,7 @@ The rootkit binary masquerades as a legitimate system component, blending into t
 
 Command-and-control runs entirely over Google's infrastructure. The rootkit uses a randomized beacon — sleeping for a configurable interval between polls, then waking to check a shared Google Calendar for encrypted commands embedded in event descriptions. Responses and exfiltrated data flow back through Google Drive. All auxiliary downloads — including the browser extraction binary — are served from Google Drive as well. There are no listening ports, no custom TCP protocols, no DNS tunneling, no direct operator-to-target connections. Every single packet from the rootkit goes to a `google.com` or `googleapis.com` address, indistinguishable from routine browser traffic to Google services. Between beacon cycles, the rootkit generates zero network traffic — complete radio silence.
 
-**What can it do?** Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction, Discord token harvesting, webcam/microphone/screen capture, SSH key and known_hosts exfiltration, crypto wallet discovery (40+ paths), WiFi password extraction, clipboard monitoring, shell history collection, process enumeration, network connection listing, environment variable extraction, cloud credential theft (AWS/GCP/Azure/K8s), SSH agent key hijacking, mount/disk enumeration, and a kernel-level keylogger that captures keystrokes before they reach userspace.
+**What can it do?** Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction, Discord token harvesting, webcam/microphone/screen capture, SSH key and known_hosts exfiltration, crypto wallet discovery, WiFi password extraction, clipboard monitoring, shell history collection, process enumeration, network connection listing, environment variable extraction, cloud credential theft (AWS/GCP/Azure/K8s), SSH agent key hijacking, mount/disk enumeration, and a kernel-level keylogger that captures keystrokes before they reach userspace.
 
 **How does it stay hidden?** Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to `find`, `ls`, `ps`, `top`, `netstat`, and any EDR scanning `/proc`. Rootkit detection tools — including **chkrootkit**, **rkhunter**, and **unhide** — return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether `/lib` is a symlink to `/usr/lib` or not.
 
@@ -141,8 +141,8 @@ flowchart TB
 - **Port hiding** — TCP and UDP ports hidden from `netstat`, `ss`, `/proc/net/tcp`, `/proc/net/udp`
 - **Module hiding** — kernel module hidden from `lsmod`, `/proc/modules`, `/sys/module`
 - **nlink deception** — `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration
-- **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `sysmod_core`
-- **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to sysmod, rootkit, or keylogger
+- **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `Xuan`
+- **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to Xuan, rootkit, or keylogger
 - **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. XOR-encrypted with a machine-derived static key; survives kernel upgrades. Output stored on disk inside already-hidden directory.
 - **Anti-debug** — debugger attachment blocked on rootkit process via ptrace hook
 - **finit_module hook** — pass-through (no longer blocks module loads); WiFi drivers and legitimate kernel modules load normally
@@ -153,13 +153,12 @@ flowchart TB
 
 ### Anti-Rootkit Evasion
 
-SYSMOD bypasses all major Linux rootkit detection tools including **chkrootkit** (chkproc, chkdirs), **rkhunter**, and **unhide** (proc, brute). Both `chkrootkit` and `rkhunter` return clean results with no warnings or detections.
+Xuan bypasses all major Linux rootkit detection tools including **chkrootkit** (chkproc, chkdirs), **rkhunter**, and **unhide** (proc, brute). Both `chkrootkit` and `rkhunter` return clean results with no warnings or detections.
 
 ### Self-Defense
 - **Anti-kprobe** — blocks other tools from attaching kprobes to hooked functions
 - **Anti-kallsyms** — `kallsyms_on_each_symbol` hook filters module symbols from kernel symbol enumeration; `num_symtab` zeroed to block `/proc/kallsyms` seq_file path
 - **Anti-find_module** — returns NULL for the module, invisible to `/sys/module` probes
-- **BPF hook** — pass-through (disabled); blocking BPF broke NetworkManager/systemd-networkd/WiFi authentication
 - **Log sanitization** — all `printk` output removed; `dmesg` contains zero module, rootkit, or keylogger references
 - **Secret unload** — proc control requires machine-specific key to unload
 
@@ -185,7 +184,7 @@ Every build and deployment produces unique binary artifacts — no two droppers 
 | Layer | Scope | Mechanism |
 |---|---|---|
 | Dead-code injection | Per-build + per-machine | 2–3 unique static functions with randomized names injected into kernel module sources |
-| XOR-key derivation | Per-machine (static) | Keylogger encryption key derived from machine suffix (FNV-1a hash of `/etc/machine-id`); same key across kernel upgrades |
+| XOR-key derivation | Per-machine | Keylogger encryption key derived from machine suffix (FNV-1a hash of `/etc/machine-id`); same key across kernel upgrades |
 | Dropper encryption key | Per-build | 32-byte XOR key for module source tarball randomized every controller compilation |
 | Rootkit binary encryption | Per-build | Full rootkit binary XOR-encrypted before embedding; dropper decrypts on extraction with per-build key |
 | Compiler flag jitter | Per-machine | Random optimization level (`-Os`/`-O2`/`-O3`) plus random alignment flags per target |
