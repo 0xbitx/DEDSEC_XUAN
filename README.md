@@ -18,7 +18,7 @@ Command-and-control runs entirely over Google's infrastructure. The rootkit uses
 
 **How does it stay hidden?** Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to `find`, `ls`, `ps`, `top`, `netstat`, and any EDR scanning `/proc`. Rootkit detection tools — including **chkrootkit**, **rkhunter**, and **unhide** — return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether `/lib` is a symlink to `/usr/lib` or not.
 
-**Persistence** is handled through a hidden cron `@reboot` entry that sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF — no dependencies, no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable. The dropper persists the module source tarball so the rootkit can self-rebuild after kernel upgrades without external intervention.
+**Persistence** is maintained through a hidden startup mechanism that executes on system initialization and sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF — no dependencies, no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable. The dropper persists the module source tarball so the rootkit can self-rebuild after kernel upgrades without external intervention.
 
 ---
 
@@ -178,11 +178,10 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 ### Anti-Forensics
 - **Machine-specific naming** — every artifact name is unique per host, derived from system identifiers via FNV-1a hash of `/etc/machine-id`
 - **Merged-usr support** — all hidden paths auto-registered for both `/lib/`/`/bin/`/`/etc/`/`/opt/` and `/usr/lib/`/`/usr/bin/`/`/usr/etc/`/`/usr/opt/` variants; physical paths resolved via `realpath()` and hidden too, works on both traditional and merged-usr systems
-- **Timestamp spoofing** — rootkit files cloned from legitimate system file timestamps (binary → `/bin/ls`, module → `/lib/modules`, config/token → `/etc/systemd/system.conf`, cron → `/etc/crontab`)
+- **Timestamp spoofing** — rootkit files cloned from legitimate system file timestamps
 - **ELF corruption** — dropper binary has corrupted ELF header to evade analysis
 - **Encrypted module source** — kernel module source XOR-encrypted in dropper binary
 - **Binary obfuscation** — dropper strings cleaned, UPX signatures removed
-- **`/proc` overlay** — binds `/tmp` over `/proc/<pid>` for `firefox-webkit-engine` processes to block /proc-based detection
 
 ### Build-Time Diversity
 
@@ -190,7 +189,7 @@ Every build and deployment produces unique binary artifacts — no two droppers 
 
 | Layer | Scope | Mechanism |
 |---|---|---|
-| Dead-code injection | Per-build + per-machine | 2–3 unique static functions with randomized names injected into kernel module sources (`module.c`, `keylogger.c`, `selfdefense.c`) |
+| Dead-code injection | Per-build + per-machine | 2–3 unique functions with randomized names injected into kernel module sources |
 | XOR-key derivation | Per-machine (static) | Keylogger encryption key derived from machine suffix (FNV-1a hash of `/etc/machine-id`); same key across kernel upgrades |
 | Dropper encryption key | Per-build | 32-byte XOR key for module source tarball randomized every controller compilation |
 | Rootkit binary encryption | Per-build | Full rootkit binary XOR-encrypted before embedding; dropper decrypts on extraction with per-build key |
