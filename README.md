@@ -14,7 +14,7 @@ The rootkit binary masquerades as a legitimate system component, blending into t
 
 Command-and-control runs entirely over Google's infrastructure. The rootkit uses a randomized beacon — verifying internet connectivity before each poll, then sleeping for a configurable interval before checking a shared Google Calendar for encrypted commands embedded in event descriptions. Responses and exfiltrated data flow back through Google Drive. All auxiliary downloads — including the browser extraction binary — are served from Google Drive as well. There are no listening ports, no custom TCP protocols, no DNS tunneling, no direct operator-to-target connections. Every single packet from the rootkit goes to a `google.com` or `googleapis.com` address, indistinguishable from routine browser traffic to Google services. Between beacon cycles, the rootkit generates zero network traffic — complete radio silence. The rootkit discovers its public IP via Google STUN and enriches its C2 heartbeat with detailed system identity.
 
-**What can it do?** Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction, Discord token harvesting (Chrome + Firefox + Discord clients), webcam/microphone/screen capture (multi-tool fallback with auto-install), SSH key and known_hosts exfiltration, crypto wallet discovery (40+ paths including browser extension wallets: MetaMask, Phantom, Coinbase Wallet, Rabby, Ronin across Chrome/Chromium/Brave/Edge/Opera/Vivaldi), WiFi password extraction, clipboard monitoring (Wayland + X11), shell history collection (bash, zsh, ksh, fish), process enumeration with kernel thread filtering, network connection listing with process resolution, environment variable extraction (from /proc/*/environ, .env files, config files, and systemd service definitions), cloud credential theft (AWS, GCP credentials.db + ADC + legacy, Azure profile/tokens/MSAL cache, K8s, Docker, DigitalOcean, Terraform), SSH agent key hijacking across 5+ socket locations, mount/disk enumeration, and a kernel-level keylogger that captures keystrokes before they reach userspace.
+**What can it do?** Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction, Discord token harvesting (Chrome + Firefox + Discord clients), webcam/microphone/screen capture (multi-tool fallback with auto-install), SSH key and known_hosts exfiltration, crypto wallet discovery, WiFi password extraction, clipboard monitoring (Wayland + X11), shell history collection (bash, zsh, ksh, fish), process enumeration with kernel thread filtering, network connection listing with process resolution, environment variable extraction (from /proc/*/environ, .env files, config files, and systemd service definitions), cloud credential theft (AWS, GCP credentials.db + ADC + legacy, Azure profile/tokens/MSAL cache, K8s, Docker, DigitalOcean, Terraform), SSH agent key hijacking across 5+ socket locations, mount/disk enumeration, and a kernel-level keylogger that captures keystrokes before they reach userspace.
 
 **How does it stay hidden?** Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to `find`, `ls`, `ps`, `top`, `netstat`, and any EDR scanning `/proc`. Rootkit detection tools — including **chkrootkit**, **rkhunter**, and **unhide** — return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether `/lib` is a symlink to `/usr/lib` or not.
 
@@ -118,14 +118,14 @@ flowchart TB
 | `dump_clipboard` | Capture clipboard content (X11 + Wayland) |
 | `dump_history` | Collect shell history (bash, zsh, ksh, fish) |
 | `dump_ssh` | Exfil SSH keys and known_hosts |
-| `dump_crypto` | Scan for and exfil crypto wallet files (40+ paths, browser extensions) |
+| `dump_crypto` | Scan for and exfil crypto wallet files |
 | `dump_mounts` | List mounted filesystems, disk usage, and physical disks |
 | `dump_processes` | Enumerate running processes with PID, user, and command line |
 | `dump_netstat` | List active network connections (TCP/UDP, IPv4/IPv6) |
 | `dump_env` | Extract sensitive env vars from /proc, .env files, config files, systemd services |
 | `dump_cloud` | Extract cloud credentials (AWS, GCP/Azure/DigitalOcean/K8s/Docker/Terraform) |
 | `dump_ssh_agent` | List unlocked keys from running SSH agents |
-| `keylog dump` | Dump captured keystrokes (static XOR key, survives kernel upgrades) |
+| `keylog dump` | Dump captured keystrokes |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
 | `takeover` | Switch rootkit to different C2 calendar |
