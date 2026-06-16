@@ -609,6 +609,643 @@ Note: The warnings above are false positives. rkhunter flags many legitimate sys
 <img width="491" height="189" alt="Screenshot_20260615_001136" src="https://github.com/user-attachments/assets/cb4adbd4-3ca8-40a2-bfc4-d1b004c514fa" />
 </details> 
 
+</details> 
+
+<details>
+<summary><b>clamscan output — clean (no rootkit binary detected)</b></summary>
+
+<br>
+
+```bash
+----------- SCAN SUMMARY -----------
+Known viruses: 3627875
+Engine version: 1.4.4
+Scanned directories: 2
+Scanned files: 3755
+Infected files: 0
+Data scanned: 2562.99 MB
+Data read: 2408.68 MB (ratio 1.06:1)
+Time: 205.943 sec (3 m 25 s)
+Start Date: 2026:06:16 13:53:50
+End Date:   2026:06:16 13:57:16
+```
+</details> 
+
+
+<details>
+<summary><b>lynis output — clean (no rootkit binary detected)</b></summary>
+
+<br>
+
+```bash
+
+[+] Initializing program
+------------------------------------
+  - Detecting OS...                                           [ DONE ]
+  - Checking profiles...                                      [ DONE ]
+
+  ---------------------------------------------------
+  Program version:           3.1.6
+  Operating system:          Linux
+  Operating system name:     Kali Linux
+  Operating system version:  Rolling release
+  End-of-life:               UNKNOWN
+  Kernel version:            6.19.14+kali
+  Hardware platform:         x86_64
+  Hostname:                  devkernel
+  ---------------------------------------------------
+  Profiles:                  /home/localhost/Downloads/lynis/default.prf
+  Log file:                  /var/log/lynis.log
+  Report file:               /var/log/lynis-report.dat
+  Report version:            1.0
+  Plugin directory:          ./plugins
+  ---------------------------------------------------
+  Auditor:                   [Not Specified]
+  Language:                  en
+  Test category:             all
+  Test group:                all
+  ---------------------------------------------------
+
+[+] System tools
+------------------------------------
+  - Scanning available tools...
+  - Checking system binaries...
+
+[+] Plugins (phase 1)
+------------------------------------
+ Note: plugins have more extensive tests and may take several minutes to complete
+  
+  - Plugins enabled                                           [ NONE ]
+
+[+] Boot and services
+------------------------------------
+  - Service Manager                                           [ systemd ]
+  - Checking UEFI boot                                        [ ENABLED ]
+  - Checking Secure Boot                                      [ DISABLED ]
+  - Checking presence GRUB2                                   [ FOUND ]
+    - Checking for password protection                        [ NONE ]
+  - Check running services (systemctl)                        [ DONE ]
+        Result: found 31 running services
+  - Check enabled services at boot (systemctl)                [ DONE ]
+        Result: found 35 enabled services
+  - Check startup files (permissions)                         [ OK ]
+  - Running 'systemd-analyze security'
+      Unit name (exposure value) and predicate
+      --------------------------------
+    - ModemManager.service (value=6.3)                        [ MEDIUM ]
+    - NetworkManager.service (value=7.8)                      [ EXPOSED ]
+    - accounts-daemon.service (value=5.5)                     [ MEDIUM ]
+    - alsa-state.service (value=9.6)                          [ UNSAFE ]
+    - auditd.service (value=9.4)                              [ UNSAFE ]
+    - bluetooth.service (value=6.0)                           [ MEDIUM ]
+    - containerd.service (value=9.6)                          [ UNSAFE ]
+    - cron.service (value=9.6)                                [ UNSAFE ]
+    - dbus.service (value=9.3)                                [ UNSAFE ]
+    - displaylink-driver.service (value=9.6)                  [ UNSAFE ]
+    - dm-event.service (value=9.5)                            [ UNSAFE ]
+    - docker.service (value=9.6)                              [ UNSAFE ]
+    - emergency.service (value=9.5)                           [ UNSAFE ]
+    - firewalld.service (value=7.3)                           [ MEDIUM ]
+    - fwupd.service (value=4.5)                               [ PROTECTED ]
+    - getty@tty1.service (value=9.6)                          [ UNSAFE ]
+    - getty@tty7.service (value=9.6)                          [ UNSAFE ]
+    - haveged.service (value=3.2)                             [ PROTECTED ]
+    - iscsid.service (value=9.5)                              [ UNSAFE ]
+    - libvirt-guests.service (value=9.6)                      [ UNSAFE ]
+    - libvirtd.service (value=9.6)                            [ UNSAFE ]
+    - lightdm.service (value=9.6)                             [ UNSAFE ]
+    - lvm2-lvmpolld.service (value=9.5)                       [ UNSAFE ]
+    - open-vm-tools.service (value=9.5)                       [ UNSAFE ]
+    - pcscd.service (value=1.8)                               [ PROTECTED ]
+    - plymouth-halt.service (value=9.5)                       [ UNSAFE ]
+    - plymouth-kexec.service (value=9.5)                      [ UNSAFE ]
+    - plymouth-poweroff.service (value=9.5)                   [ UNSAFE ]
+    - plymouth-reboot.service (value=9.5)                     [ UNSAFE ]
+    - plymouth-start.service (value=9.5)                      [ UNSAFE ]
+    - polkit.service (value=1.2)                              [ PROTECTED ]
+    - power-profiles-daemon.service (value=1.0)               [ PROTECTED ]
+    - rescue.service (value=9.5)                              [ UNSAFE ]
+    - rpc-gssd.service (value=9.5)                            [ UNSAFE ]
+    - rpc-statd-notify.service (value=9.5)                    [ UNSAFE ]
+    - rpc-svcgssd.service (value=9.5)                         [ UNSAFE ]
+    - rsync.service (value=8.5)                               [ EXPOSED ]
+    - rtkit-daemon.service (value=7.2)                        [ MEDIUM ]
+    - smartmontools.service (value=9.6)                       [ UNSAFE ]
+    - ssh.service (value=9.6)                                 [ UNSAFE ]
+    - systemd-ask-password-console.service (value=9.4)        [ UNSAFE ]
+    - systemd-ask-password-plymouth.service (value=9.5)       [ UNSAFE ]
+    - systemd-ask-password-wall.service (value=9.4)           [ UNSAFE ]
+    - systemd-bsod.service (value=9.5)                        [ UNSAFE ]
+    - systemd-hostnamed.service (value=1.7)                   [ PROTECTED ]
+    - systemd-importd.service (value=5.0)                     [ MEDIUM ]
+    - systemd-journald.service (value=4.9)                    [ PROTECTED ]
+    - systemd-logind.service (value=2.8)                      [ PROTECTED ]
+    - systemd-machined.service (value=6.2)                    [ MEDIUM ]
+    - systemd-mountfsd.service (value=7.3)                    [ MEDIUM ]
+    - systemd-networkd.service (value=2.9)                    [ PROTECTED ]
+    - systemd-nsresourced.service (value=4.4)                 [ PROTECTED ]
+    - systemd-rfkill.service (value=9.4)                      [ UNSAFE ]
+    - systemd-sysupdate.service (value=5.3)                   [ MEDIUM ]
+    - systemd-timesyncd.service (value=2.1)                   [ PROTECTED ]
+    - systemd-udevd.service (value=7.1)                       [ MEDIUM ]
+    - systemd-userdbd.service (value=2.3)                     [ PROTECTED ]
+    - tpm-udev.service (value=9.6)                            [ UNSAFE ]
+    - udisks2.service (value=9.6)                             [ UNSAFE ]
+    - upower.service (value=2.4)                              [ PROTECTED ]
+    - user@1000.service (value=9.4)                           [ UNSAFE ]
+    - uuidd.service (value=5.8)                               [ MEDIUM ]
+    - vgauth.service (value=9.5)                              [ UNSAFE ]
+    - virtlockd.service (value=9.6)                           [ UNSAFE ]
+    - virtlogd.service (value=2.2)                            [ PROTECTED ]
+    - virtualbox-guest-utils.service (value=9.6)              [ UNSAFE ]
+    - wpa_supplicant.service (value=9.6)                      [ UNSAFE ]
+
+[+] Kernel
+------------------------------------
+  - Checking default runlevel                                 [ runlevel 5 ]
+  - Checking CPU support (NX/PAE)
+    CPU support: PAE and/or NoeXecute supported               [ FOUND ]
+  - Checking kernel version and release                       [ DONE ]
+  - Checking kernel type                                      [ DONE ]
+  - Checking loaded kernel modules                            [ DONE ]
+      Found 201 active modules
+  - Checking Linux kernel configuration file                  [ FOUND ]
+  - Checking default I/O kernel scheduler                     [ NOT FOUND ]
+  - Checking for available kernel update                      [ OK ]
+  - Checking core dumps configuration
+    - configuration in systemd conf files                     [ DEFAULT ]
+    - configuration in /etc/profile                           [ DEFAULT ]
+    - 'hard' configuration in /etc/security/limits.conf       [ ENABLED ]
+    - 'soft' configuration in /etc/security/limits.conf       [ DISABLED ]
+    - Checking setuid core dumps configuration                [ PROTECTED ]
+  - Check if reboot is needed                                 [ NO ]
+
+[+] Memory and Processes
+------------------------------------
+  - Checking /proc/meminfo                                    [ FOUND ]
+  - Searching for dead/zombie processes                       [ NOT FOUND ]
+  - Searching for IO waiting processes                        [ NOT FOUND ]
+  - Search prelink tooling                                    [ NOT FOUND ]
+
+[+] Users, Groups and Authentication
+------------------------------------
+  - Administrator accounts                                    [ OK ]
+  - Unique UIDs                                               [ OK ]
+  - Consistency of group files (grpck)                        [ WARNING ]
+  - Unique group IDs                                          [ OK ]
+  - Unique group names                                        [ OK ]
+  - Password file consistency                                 [ OK ]
+  - Password hashing methods                                  [ OK ]
+  - Checking password hashing rounds                          [ DISABLED ]
+  - Query system users (non daemons)                          [ DONE ]
+  - NIS+ authentication support                               [ NOT ENABLED ]
+  - NIS authentication support                                [ NOT ENABLED ]
+  - Sudoers file(s)                                           [ FOUND ]
+    - Permissions for directory: /etc/sudoers.d               [ WARNING ]
+    - Permissions for: /etc/sudoers                           [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_86236  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_89137  [ OK ]
+    - Permissions for: /etc/sudoers.d/kali-grant-root         [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_85504  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_87021  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_72772  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_71436  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_75108  [ OK ]
+    - Permissions for: /etc/sudoers.d/kdesu-sudoers           [ OK ]
+    - Permissions for: /etc/sudoers.d/localhost.tmpt          [ WARNING ]
+    - Permissions for: /etc/sudoers.d/ospd-openvas            [ OK ]
+    - Permissions for: /etc/sudoers.d/localhost               [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_74453  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_90895  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_96236  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_71647  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_79218  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_80005  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_84100  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_82243  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_72483  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_82577  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_93506  [ OK ]
+    - Permissions for: /etc/sudoers.d/cifs-upcall-poc-1000_75638  [ OK ]
+  - PAM password strength tools                               [ SUGGESTION ]
+  - PAM configuration files (pam.conf)                        [ FOUND ]
+  - PAM configuration files (pam.d)                           [ FOUND ]
+  - PAM modules                                               [ FOUND ]
+  - LDAP module in PAM                                        [ NOT FOUND ]
+  - Accounts without expire date                              [ SUGGESTION ]
+  - Accounts without password                                 [ OK ]
+  - Locked accounts                                           [ FOUND ]
+  - Checking user password aging (minimum)                    [ DISABLED ]
+  - User password aging (maximum)                             [ DISABLED ]
+  - Checking expired passwords                                [ OK ]
+  - Checking Linux single user mode authentication            [ OK ]
+  - Determining default umask
+    - umask (/etc/profile)                                    [ NOT FOUND ]
+    - umask (/etc/login.defs)                                 [ SUGGESTION ]
+  - LDAP authentication support                               [ NOT ENABLED ]
+  - Logging failed login attempts                             [ DISABLED ]
+
+[+] Kerberos
+------------------------------------
+  - Check for Kerberos KDC and principals                     [ NOT FOUND ]
+
+[+] Shells
+------------------------------------
+  - Checking shells from /etc/shells
+    Result: found 13 shells (valid shells: 13).
+    - Session timeout settings/tools                          [ NONE ]
+  - Checking default umask values
+    - Checking default umask in /etc/bash.bashrc              [ NONE ]
+    - Checking default umask in /etc/profile                  [ NONE ]
+
+[+] File systems
+------------------------------------
+  - Checking mount points
+    - Checking /home mount point                              [ SUGGESTION ]
+    - Checking /tmp mount point                               [ OK ]
+    - Checking /var mount point                               [ SUGGESTION ]
+  - Query swap partitions (fstab)                             [ OK ]
+  - Testing swap partitions                                   [ OK ]
+  - Testing /proc mount (hidepid)                             [ SUGGESTION ]
+  - Checking for old files in /tmp                            [ OK ]
+  - Checking /tmp sticky bit                                  [ OK ]
+  - Checking /var/tmp sticky bit                              [ OK ]
+  - ACL support root file system                              [ ENABLED ]
+  - Mount options of /                                        [ NON DEFAULT ]
+  - Mount options of /dev                                     [ PARTIALLY HARDENED ]
+  - Mount options of /dev/shm                                 [ PARTIALLY HARDENED ]
+  - Mount options of /run                                     [ HARDENED ]
+  - Mount options of /tmp                                     [ PARTIALLY HARDENED ]
+  - Total without nodev:6 noexec:34 nosuid:28 ro or noexec (W^X): 10 of total 52
+  - Checking Locate database                                  [ FOUND ]
+  - Disable kernel support of some filesystems
+
+[+] USB Devices
+------------------------------------
+  - Checking usb-storage driver (modprobe config)             [ NOT DISABLED ]
+  - Checking USB devices authorization                        [ ENABLED ]
+  - Checking USBGuard                                         [ NOT FOUND ]
+
+[+] Storage
+------------------------------------
+  - Checking firewire ohci driver (modprobe config)           [ NOT DISABLED ]
+
+[+] NFS
+------------------------------------
+  - Query rpc registered programs                             [ DONE ]
+  - Query NFS versions                                        [ DONE ]
+  - Query NFS protocols                                       [ DONE ]
+  - Check running NFS daemon                                  [ NOT FOUND ]
+
+[+] Name services
+------------------------------------
+  - Checking search domains                                   [ FOUND ]
+  - Searching DNS domain name                                 [ UNKNOWN ]
+  - Checking /etc/hosts
+    - Duplicate entries in hosts file                         [ NONE ]
+    - Presence of configured hostname in /etc/hosts           [ FOUND ]
+    - Hostname mapped to localhost                            [ NOT FOUND ]
+    - Localhost mapping to IP address                         [ OK ]
+
+[+] Ports and packages
+------------------------------------
+  - Searching package managers
+    - Searching dpkg package manager                          [ FOUND ]
+      - Querying package manager
+
+  [WARNING]: Test PKGS-7345 had a long execution: 25.377545 seconds
+
+    - Query unpurged packages                                 [ FOUND ]
+  - Checking APT package database                             [ OK ]
+  - Checking vulnerable packages (apt-get only)               [ DONE ]
+
+  [WARNING]: Test PKGS-7392 had a long execution: 11.716633 seconds
+
+  - Checking upgradeable packages                             [ SKIPPED ]
+  - Checking package audit tool                               [ INSTALLED ]
+    Found: apt-get
+  - Toolkit for automatic upgrades                            [ NOT FOUND ]
+
+[+] Networking
+------------------------------------
+  - Checking IPv6 configuration                               [ ENABLED ]
+      Configuration method                                    [ AUTO ]
+      IPv6 only                                               [ NO ]
+  - Checking configured nameservers
+    - Testing nameservers
+        Nameserver: 192.168.1.1                               [ OK ]
+        Nameserver: fd4f:fd8d:dfdb:8::1                       [ OK ]
+    - Minimal of 2 responsive nameservers                     [ OK ]
+  - Checking default gateway                                  [ DONE ]
+  - Getting listening ports (TCP/UDP)                         [ DONE ]
+  - Checking promiscuous interfaces                           [ OK ]
+  - Checking waiting connections                              [ OK ]
+  - Checking status DHCP client                               [ NOT ACTIVE ]
+  - Checking for ARP monitoring software                      [ NOT FOUND ]
+  - Uncommon network protocols                                [ 0 ]
+
+[+] Printers and Spools
+------------------------------------
+  - Checking cups daemon                                      [ NOT FOUND ]
+  - Checking lp daemon                                        [ NOT RUNNING ]
+
+[+] Software: e-mail and messaging
+------------------------------------
+
+[+] Software: firewalls
+------------------------------------
+  - Checking iptables kernel module                           [ NOT FOUND ]
+  - Checking host based firewall                              [ ACTIVE ]
+
+[+] Software: webserver
+------------------------------------
+  - Checking Apache (binary /usr/sbin/apache2)                [ FOUND ]
+      Info: Configuration file found (/etc/apache2/apache2.conf)
+      Info: No virtual hosts found
+    * Loadable modules                                        [ FOUND (118) ]
+        - Found 118 loadable modules
+          mod_evasive: anti-DoS/brute force                   [ NOT FOUND ]
+          mod_reqtimeout/mod_qos                              [ FOUND ]
+          ModSecurity: web application firewall               [ NOT FOUND ]
+  - Checking TraceEnable setting in:
+      /etc/apache2/conf-enabled/javascript-common.conf        [ NOT FOUND ]
+      /etc/apache2/conf-enabled/localized-error-pages.conf    [ NOT FOUND ]
+      /etc/apache2/conf-enabled/charset.conf                  [ NOT FOUND ]
+      /etc/apache2/conf-enabled/other-vhosts-access-log.conf  [ NOT FOUND ]
+      /etc/apache2/conf-enabled/security.conf                 [ FOUND ]
+      /etc/apache2/conf-enabled/serve-cgi-bin.conf            [ NOT FOUND ]
+      /etc/apache2/sites-enabled/000-default.conf             [ NOT FOUND ]
+      /etc/apache2/mods-enabled/mpm_prefork.conf              [ NOT FOUND ]
+      /etc/apache2/mods-enabled/negotiation.conf              [ NOT FOUND ]
+      /etc/apache2/mods-enabled/reqtimeout.conf               [ NOT FOUND ]
+      /etc/apache2/mods-enabled/status.conf                   [ NOT FOUND ]
+      /etc/apache2/mods-enabled/mime.conf                     [ NOT FOUND ]
+      /etc/apache2/mods-enabled/autoindex.conf                [ NOT FOUND ]
+      /etc/apache2/mods-enabled/dir.conf                      [ NOT FOUND ]
+      /etc/apache2/mods-enabled/php8.4.conf                   [ NOT FOUND ]
+      /etc/apache2/mods-enabled/deflate.conf                  [ NOT FOUND ]
+      /etc/apache2/mods-enabled/alias.conf                    [ NOT FOUND ]
+      /etc/apache2/mods-enabled/setenvif.conf                 [ NOT FOUND ]
+      /etc/apache2/sites-available/default-ssl.conf           [ NOT FOUND ]
+      /etc/apache2/sites-available/000-default.conf           [ NOT FOUND ]
+      /etc/apache2/ports.conf                                 [ NOT FOUND ]
+      /etc/apache2/mods-available/mpm_prefork.conf            [ NOT FOUND ]
+      /etc/apache2/mods-available/negotiation.conf            [ NOT FOUND ]
+      /etc/apache2/mods-available/php8.2.conf                 [ NOT FOUND ]
+      /etc/apache2/mods-available/userdir.conf                [ NOT FOUND ]
+      /etc/apache2/mods-available/cgid.conf                   [ NOT FOUND ]
+      /etc/apache2/mods-available/reqtimeout.conf             [ NOT FOUND ]
+      /etc/apache2/mods-available/status.conf                 [ NOT FOUND ]
+      /etc/apache2/mods-available/mime.conf                   [ NOT FOUND ]
+      /etc/apache2/mods-available/info.conf                   [ NOT FOUND ]
+      /etc/apache2/mods-available/ssl.conf                    [ NOT FOUND ]
+      /etc/apache2/mods-available/mpm_worker.conf             [ NOT FOUND ]
+      /etc/apache2/mods-available/cache_disk.conf             [ NOT FOUND ]
+      /etc/apache2/mods-available/proxy_ftp.conf              [ NOT FOUND ]
+      /etc/apache2/mods-available/dav_fs.conf                 [ NOT FOUND ]
+      /etc/apache2/mods-available/http2.conf                  [ NOT FOUND ]
+      /etc/apache2/mods-available/proxy.conf                  [ NOT FOUND ]
+      /etc/apache2/mods-available/mime_magic.conf             [ NOT FOUND ]
+      /etc/apache2/mods-available/actions.conf                [ NOT FOUND ]
+      /etc/apache2/mods-available/ldap.conf                   [ NOT FOUND ]
+      /etc/apache2/mods-available/mpm_event.conf              [ NOT FOUND ]
+      /etc/apache2/mods-available/autoindex.conf              [ NOT FOUND ]
+      /etc/apache2/mods-available/dir.conf                    [ NOT FOUND ]
+      /etc/apache2/mods-available/proxy_html.conf             [ NOT FOUND ]
+      /etc/apache2/mods-available/php8.4.conf                 [ NOT FOUND ]
+      /etc/apache2/mods-available/deflate.conf                [ NOT FOUND ]
+      /etc/apache2/mods-available/proxy_balancer.conf         [ NOT FOUND ]
+      /etc/apache2/mods-available/alias.conf                  [ NOT FOUND ]
+      /etc/apache2/mods-available/setenvif.conf               [ NOT FOUND ]
+      /etc/apache2/mods-available/proxy_connect.conf          [ NOT FOUND ]
+      /etc/apache2/apache2.conf                               [ NOT FOUND ]
+      /etc/apache2/conf-available/javascript-common.conf      [ NOT FOUND ]
+      /etc/apache2/conf-available/localized-error-pages.conf  [ NOT FOUND ]
+      /etc/apache2/conf-available/charset.conf                [ NOT FOUND ]
+      /etc/apache2/conf-available/other-vhosts-access-log.conf  [ NOT FOUND ]
+      /etc/apache2/conf-available/security.conf               [ FOUND ]
+      /etc/apache2/conf-available/serve-cgi-bin.conf          [ NOT FOUND ]
+  - Checking nginx                                            [ NOT FOUND ]
+
+[+] SSH Support
+------------------------------------
+  - Checking running SSH daemon                               [ NOT FOUND ]
+
+[+] SNMP Support
+------------------------------------
+  - Checking running SNMP daemon                              [ NOT FOUND ]
+
+[+] Databases
+------------------------------------
+    No database engines found
+
+[+] LDAP Services
+------------------------------------
+  - Checking OpenLDAP instance                                [ NOT FOUND ]
+
+[+] PHP
+------------------------------------
+  - Checking PHP                                              [ FOUND ]
+    - Checking PHP disabled functions                         [ FOUND ]
+    - Checking expose_php option                              [ OFF ]
+    - Checking enable_dl option                               [ OFF ]
+    - Checking allow_url_fopen option                         [ ON ]
+    - Checking allow_url_include option                       [ OFF ]
+    - Checking listen option                                  [ OK ]
+
+[+] Squid Support
+------------------------------------
+  - Checking running Squid daemon                             [ NOT FOUND ]
+
+[+] Logging and files
+------------------------------------
+  - Checking for a running log daemon                         [ OK ]
+    - Checking Syslog-NG status                               [ NOT FOUND ]
+    - Checking systemd journal status                         [ FOUND ]
+    - Checking Metalog status                                 [ NOT FOUND ]
+    - Checking RSyslog status                                 [ NOT FOUND ]
+    - Checking RFC 3195 daemon status                         [ NOT FOUND ]
+    - Checking minilogd instances                             [ NOT FOUND ]
+    - Checking wazuh-agent daemon status                      [ NOT FOUND ]
+  - Checking logrotate presence                               [ OK ]
+  - Checking remote logging                                   [ NOT ENABLED ]
+  - Checking log directories (static list)                    [ DONE ]
+  - Checking open log files                                   [ DONE ]
+  - Checking deleted files in use                             [ FILES FOUND ]
+
+[+] Insecure services
+------------------------------------
+  - Installed inetd package                                   [ NOT FOUND ]
+  - Installed xinetd package                                  [ OK ]
+    - xinetd status                                           [ NOT ACTIVE ]
+  - Installed rsh client package                              [ OK ]
+  - Installed rsh server package                              [ OK ]
+  - Installed telnet client package                           [ OK ]
+  - Installed telnet server package                           [ NOT FOUND ]
+  - Checking NIS client installation                          [ OK ]
+  - Checking NIS server installation                          [ OK ]
+  - Checking TFTP client installation                         [ SUGGESTION ]
+  - Checking TFTP server installation                         [ SUGGESTION ]
+
+[+] Banners and identification
+------------------------------------
+  - /etc/issue                                                [ FOUND ]
+    - /etc/issue contents                                     [ WEAK ]
+  - /etc/issue.net                                            [ FOUND ]
+    - /etc/issue.net contents                                 [ WEAK ]
+
+[+] Scheduled tasks
+------------------------------------
+  - Checking crontab and cronjob files                        [ DONE ]
+
+[+] Accounting
+------------------------------------
+  - Checking accounting information                           [ NOT FOUND ]
+  - Checking sysstat accounting data                          [ DISABLED ]
+  - Checking auditd                                           [ NOT FOUND ]
+
+[+] Time and Synchronization
+------------------------------------
+  - NTP daemon found: systemd (timesyncd)                     [ FOUND ]
+  - Checking for a running NTP daemon or client               [ OK ]
+  - Last time synchronization                                 [ 766s ]
+
+[+] Cryptography
+------------------------------------
+  - Checking for expired SSL certificates [0/150]             [ NONE ]
+
+  [WARNING]: Test CRYP-7902 had a long execution: 112.655630 seconds
+
+  - Found 0 encrypted and 1 unencrypted swap devices in use.  [ OK ]
+  - Kernel entropy is sufficient                              [ YES ]
+  - HW RNG & rngd                                             [ NO ]
+  - SW prng                                                   [ YES ]
+  MOR-bit set                                                 [ YES ]
+
+[+] Virtualization
+------------------------------------
+
+[+] Containers
+------------------------------------
+    - Docker
+      - Docker daemon                                         [ RUNNING ]
+        - Docker info output (warnings)                       [ NONE ]
+      - Containers
+        - Total containers                                    [ 3 ]
+        - Unused containers                                   [ 3 ]
+    - File permissions                                        [ OK ]
+
+[+] Security frameworks
+------------------------------------
+  - Checking presence AppArmor                                [ FOUND ]
+    - Checking AppArmor status                                [ ENABLED ]
+        Found 150 unconfined processes
+  - Checking presence SELinux                                 [ FOUND ]
+    - Checking SELinux status                                 [ DISABLED ]
+  - Checking presence TOMOYO Linux                            [ NOT FOUND ]
+  - Checking presence grsecurity                              [ NOT FOUND ]
+  - Checking for implemented MAC framework                    [ OK ]
+
+[+] Software: file integrity
+------------------------------------
+  - Checking file integrity tools
+  - dm-integrity (status)                                     [ DISABLED ]
+  - dm-verity (status)                                        [ DISABLED ]
+  - Checking presence integrity tool                          [ NOT FOUND ]
+
+[+] Software: System tooling
+------------------------------------
+  - Checking automation tooling
+  - Automation tooling                                        [ NOT FOUND ]
+  - Checking for IDS/IPS tooling                              [ NONE ]
+
+[+] Software: Malware
+------------------------------------
+  - Checking chkrootkit                                       [ FOUND ]
+  - Checking Rootkit Hunter                                   [ FOUND ]
+  - Checking ClamAV scanner                                   [ FOUND ]
+  - Malware software components                               [ FOUND ]
+    - Active agent                                            [ NOT FOUND ]
+    - Rootkit scanner                                         [ FOUND ]
+
+[+] File Permissions
+------------------------------------
+  - Starting file permissions check
+    File: /boot/grub/grub.cfg                                 [ OK ]
+    File: /etc/crontab                                        [ SUGGESTION ]
+    File: /etc/group                                          [ OK ]
+    File: /etc/group-                                         [ OK ]
+    File: /etc/hosts.allow                                    [ OK ]
+    File: /etc/hosts.deny                                     [ OK ]
+    File: /etc/issue                                          [ OK ]
+    File: /etc/issue.net                                      [ OK ]
+    File: /etc/motd                                           [ OK ]
+    File: /etc/passwd                                         [ OK ]
+    File: /etc/passwd-                                        [ OK ]
+    File: /etc/ssh/sshd_config                                [ SUGGESTION ]
+    Directory: /root/.ssh                                     [ OK ]
+    Directory: /etc/cron.d                                    [ SUGGESTION ]
+    Directory: /etc/cron.daily                                [ SUGGESTION ]
+    Directory: /etc/cron.hourly                               [ SUGGESTION ]
+    Directory: /etc/cron.weekly                               [ SUGGESTION ]
+    Directory: /etc/cron.monthly                              [ SUGGESTION ]
+
+[+] Home directories
+------------------------------------
+  - Permissions of home directories                           [ WARNING ]
+  - Ownership of home directories                             [ OK ]
+  - Checking shell history files                              [ OK ]
+
+[+] Kernel Hardening
+------------------------------------
+  - Comparing sysctl key pairs with scan profile
+    - dev.tty.ldisc_autoload (exp: 0)                         [ DIFFERENT ]
+    - fs.protected_fifos (exp: 2)                             [ DIFFERENT ]
+    - fs.protected_hardlinks (exp: 1)                         [ OK ]
+    - fs.protected_regular (exp: 2)                           [ OK ]
+    - fs.protected_symlinks (exp: 1)                          [ OK ]
+    - fs.suid_dumpable (exp: 0)                               [ DIFFERENT ]
+    - kernel.core_uses_pid (exp: 1)                           [ OK ]
+    - kernel.ctrl-alt-del (exp: 0)                            [ OK ]
+    - kernel.dmesg_restrict (exp: 1)                          [ DIFFERENT ]
+    - kernel.kptr_restrict (exp: 2)                           [ DIFFERENT ]
+    - kernel.modules_disabled (exp: 1)                        [ DIFFERENT ]
+    - kernel.perf_event_paranoid (exp: 2 3 4)                 [ OK ]
+    - kernel.randomize_va_space (exp: 2)                      [ OK ]
+    - kernel.sysrq (exp: 0)                                   [ DIFFERENT ]
+    - kernel.unprivileged_bpf_disabled (exp: 1)               [ DIFFERENT ]
+    - kernel.yama.ptrace_scope (exp: 1 2 3)                   [ DIFFERENT ]
+    - net.core.bpf_jit_harden (exp: 2)                        [ DIFFERENT ]
+    - net.ipv4.conf.all.accept_redirects (exp: 0)             [ OK ]
+    - net.ipv4.conf.all.accept_source_route (exp: 0)          [ OK ]
+    - net.ipv4.conf.all.bootp_relay (exp: 0)                  [ OK ]
+    - net.ipv4.conf.all.forwarding (exp: 0)                   [ DIFFERENT ]
+    - net.ipv4.conf.all.log_martians (exp: 1)                 [ DIFFERENT ]
+    - net.ipv4.conf.all.mc_forwarding (exp: 0)                [ OK ]
+    - net.ipv4.conf.all.proxy_arp (exp: 0)                    [ OK ]
+    - net.ipv4.conf.all.rp_filter (exp: 1)                    [ DIFFERENT ]
+    - net.ipv4.conf.all.send_redirects (exp: 0)               [ DIFFERENT ]
+    - net.ipv4.conf.default.accept_redirects (exp: 0)         [ DIFFERENT ]
+    - net.ipv4.conf.default.accept_source_route (exp: 0)      [ OK ]
+    - net.ipv4.conf.default.log_martians (exp: 1)             [ DIFFERENT ]
+    - net.ipv4.icmp_echo_ignore_broadcasts (exp: 1)           [ OK ]
+    - net.ipv4.icmp_ignore_bogus_error_responses (exp: 1)     [ OK ]
+    - net.ipv4.tcp_syncookies (exp: 1)                        [ OK ]
+    - net.ipv4.tcp_timestamps (exp: 0 1)                      [ OK ]
+    - net.ipv6.conf.all.accept_redirects (exp: 0)             [ DIFFERENT ]
+    - net.ipv6.conf.all.accept_source_route (exp: 0)          [ OK ]
+    - net.ipv6.conf.default.accept_redirects (exp: 0)         [ DIFFERENT ]
+    - net.ipv6.conf.default.accept_source_route (exp: 0)      [ OK ]
+
+[+] Hardening
+------------------------------------
+    - Installed compiler(s)                                   [ FOUND ]
+    - Installed malware scanner                               [ FOUND ]
+    - Non-native binary formats                               [ FOUND ]
+```
+</details> 
+
+
 ## Build
 
 ### Prerequisites
