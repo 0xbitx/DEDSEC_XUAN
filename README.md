@@ -164,7 +164,6 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 ### Beaconing
 - **Randomized intervals** — polls Google Calendar at random intervals between configurable min/max values
 - **Configurable per rootkit** — each infected machine can have different beacon timing
-- **Network pre-check** — verifies internet connectivity (TCP to 8.8.8.8:53) before each beacon; sleeps if offline
 - **Zero traffic between polls** — complete network silence during sleep cycles, no heartbeats or keep-alives
 - **Jitter** — random variation within the configured range prevents predictable polling patterns
 - **Identity auto-refresh** — re-discovers public IP and system state every 5 minutes; auto-updates the C2 calendar event summary
