@@ -140,11 +140,10 @@ flowchart TB
 - **Port hiding** — TCP and UDP ports hidden from `netstat`, `ss`, `/proc/net/tcp`, `/proc/net/udp`
 - **Module hiding** — kernel module hidden from `lsmod`, `/proc/modules`, `/sys/module`
 - **nlink deception** — `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration; `/sys/module` nlink decremented to conceal module presence
-- **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `XUAN_core`
+- **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `xuan`
 - **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to XUAN, rootkit, or keylogger
-- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. XOR-encrypted with a machine-derived static key; survives kernel upgrades. Output stored on disk inside already-hidden directory.
+- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. XOR-encrypted with a machine-derived static key; survives kernel upgrades.
 - **Anti-debug** — debugger attachment blocked on rootkit process via ptrace hook
-- **finit_module hook** — pass-through (no longer blocks module loads); WiFi drivers and legitimate kernel modules load normally
 - **`/proc/<pid>/fd` hidden** — open file descriptors invisible, preventing enumeration of keylogger output and config files
 - **Module load retry** — auto-retries kernel module load every 30 seconds if module is inactive; module source tarball persisted to hidden config directory for on-the-fly recompilation
 - **Auto-load on boot** — loads automatically on startup, no manual intervention needed
@@ -159,7 +158,6 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Anti-kprobe** — blocks other tools from attaching kprobes to hooked functions
 - **Anti-kallsyms** — `kallsyms_on_each_symbol` hook filters module symbols from kernel symbol enumeration; `num_symtab` zeroed to block `/proc/kallsyms` seq_file path
 - **Anti-find_module** — returns NULL for the module, invisible to `/sys/module` probes
-- **BPF hook** — pass-through (disabled); blocking BPF broke NetworkManager/systemd-networkd/WiFi authentication
 - **Log sanitization** — all `printk` output removed; `dmesg` contains zero module, rootkit, or keylogger references
 - **Secret unload** — proc control requires machine-specific key to unload
 
