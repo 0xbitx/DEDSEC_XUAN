@@ -169,8 +169,6 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Network pre-check** — verifies internet connectivity (TCP to 8.8.8.8:53) before each beacon; sleeps if offline
 - **Zero traffic between polls** — complete network silence during sleep cycles, no heartbeats or keep-alives
 - **Jitter** — random variation within the configured range prevents predictable polling patterns
-- **Network profile** — bursts of Google API traffic at irregular intervals, identical to a user manually refreshing Gmail
-- **Identity heartbeat** — periodically updates the C2 calendar event with enriched system identity including: hostname, STUN-discovered public IP, MAC address, machine-id, hardware vendor, product name, CPU model/cores, total/free RAM, storage usage, OS distro/kernel/arch, GPU, screen resolution, system uptime, WSL/VM detection, user list, process count/load, and network interfaces
 - **Identity auto-refresh** — re-discovers public IP and system state every 5 minutes; auto-updates the C2 calendar event summary
 - **Calendar auto-registration** — if no matching C2 event is found, the rootkit creates its own event on the shared calendar with its identity
 
