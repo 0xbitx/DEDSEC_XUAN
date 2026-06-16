@@ -149,8 +149,7 @@ flowchart TB
 - **Module load retry** — auto-retries kernel module load every 30 seconds if module is inactive; module source tarball persisted to hidden config directory for on-the-fly recompilation
 - **Auto-load on boot** — loads automatically on startup, no manual intervention needed
 - **Kernel upgrade resilience** — module source tarball persisted to hidden config directory; implant auto-detects kernel version changes and recompiles the module on-the-fly, then reloads it seamlessly
-- **Dynamic config reload** — C2 calendar and beacon configuration can be hot-swapped without restarting the rootkit via the `takeover` command; config is decrypted and reloaded in-memory on change
-- **Network connectivity check** — verifies internet access (TCP connect to 8.8.8.8:53) before each beacon poll; sleeps and retries if offline
+- **Dynamic config reload** — C2 calendar and beacon configuration can be hot-swapped via the `takeover` command
 
 ### Anti-Rootkit Evasion
 
