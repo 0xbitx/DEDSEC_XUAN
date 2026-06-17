@@ -1419,6 +1419,7 @@ DEDSEC_XUAN/
     git clone https://github.com/0xbitx/DEDSEC_XUAN.git
     cd DEDSEC_XUAN
     sudo pip3 install tabulate
+    sudo apt install upx-ucl
     chmod +x dedsec_xuan
     sudo ./dedsec_xuan
     
