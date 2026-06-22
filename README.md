@@ -1244,6 +1244,12 @@ End Date:   2026:06:16 13:57:16
 ```
 </details> 
 
+## Tool Screenshots:
+
+<img width="811" height="612" alt="Screenshot_20260622_165921" src="https://github.com/user-attachments/assets/339d9c1b-2d74-4ed5-8de8-0bb3d8767bf4" />
+<img width="871" height="728" alt="Screenshot_20260622_170109" src="https://github.com/user-attachments/assets/a39908dd-4f6c-42d1-8ea0-bc750a48e28d" />
+<img width="843" height="712" alt="Screenshot_20260622_170211" src="https://github.com/user-attachments/assets/7abd9f8a-5a56-43e0-951e-c1b92835076d" />
+<img width="1119" height="810" alt="Screenshot_20260622_170353" src="https://github.com/user-attachments/assets/7d14a5ca-65f2-4a1c-ba72-cdad5d066592" />
 
 ## Build
 
