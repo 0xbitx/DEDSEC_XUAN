@@ -125,7 +125,7 @@ flowchart TB
 | `dump_env` | Extract sensitive env vars from /proc, .env files, config files, systemd services |
 | `dump_cloud` | Extract cloud credentials (AWS, GCP/Azure/DigitalOcean/K8s/Docker/Terraform) |
 | `dump_ssh_agent` | List unlocked keys from running SSH agents |
-| `keylog dump` | Dump captured keystrokes |
+| `keylog dump` | Dump captured keystrokes — see [Keylogger](#keylogger) for architecture details |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
 | `takeover` | Switch rootkit to different C2 calendar |
@@ -142,7 +142,7 @@ flowchart TB
 - **nlink deception** — `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration; `/sys/module` nlink decremented to conceal module presence
 - **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `xuan`
 - **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to XUAN, rootkit, or keylogger
-- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. XOR-encrypted with a machine-derived static key; survives kernel upgrades.
+- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. Full architecture, anti-loss pipeline, and exfiltration details: [Keylogger](#keylogger).
 - **Anti-debug** — debugger attachment blocked on rootkit process via ptrace hook
 - **`/proc/<pid>/fd` hidden** — open file descriptors invisible, preventing enumeration of keylogger output and config files
 - **Module load retry** — auto-retries kernel module load every 30 seconds if module is inactive; module source tarball persisted to hidden config directory for on-the-fly recompilation
@@ -177,6 +177,40 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Encrypted module source** — kernel module source XOR-encrypted in dropper binary
 - **Binary obfuscation** — dropper strings cleaned, UPX signatures removed
 
+### Keylogger
+
+Built directly into the kernel module — not a userspace process, not an eBPF program, not a `/dev/input` reader. The keylogger captures keystrokes at the **keyboard notifier** level inside the kernel, before any userspace application (including terminal emulators, password managers, and Wayland compositors) ever sees them.
+
+**Capture architecture:**
+- **Keyboard notifier hook** — `register_keyboard_notifier()` intercepts every keypress at the input layer *above* the hardware driver but *below* the tty/evdev delivery path. No `/dev/input` polling, no X11/Wayland dependency.
+- **Full keymap** — 90+ keycodes mapped with shift-awareness: letters, numbers, symbols, modifiers, navigation keys, and function keys (F1–F12). Unknown keys logged as raw codes.
+- **Modifier stripping** — Ctrl/Shift/Alt/Caps/Num/Scroll lock keys are captured as `[LCTRL]`/`[LSHIFT]`/etc. tags but stripped on display; only actual typed characters survive translation.
+- **Backspace/delete simulation** — `[BS]` and `[DEL]` tags are translated into actual backspace effects when displayed, reconstructing the final typed text.
+
+**Persistence & resilience:**
+- **File-based storage** — keystrokes written to file inside the already-hidden directory. Survives reboots, power loss, and kernel panics (data flushed on every Enter keypress).
+- **Kernel upgrade survival** — XOR encryption key derived from machine suffix (FNV-1a of `/etc/machine-id`), static across kernel versions. Module source tarball persisted on disk; implant auto-recompiles on kernel change.
+- **Unbounded storage** — no artificial file size limit. The file grows indefinitely (tested to 10MB+). All keystrokes are retained across reboots and kernel upgrades.
+
+**Anti-loss write pipeline:**
+- **128KB in-memory buffer** — 16× larger than typical kernel keyloggers. A single flush holds ~15,000 keystrokes before hitting disk.
+- **Double-buffered async writes** — `buf` accumulates keystrokes; `wbuf` handles XOR-encrypted disk writes via workqueue. The two buffers operate independently so capture never blocks on I/O.
+- **`flush_pending` chain** — if a disk write is still in progress when the buffer needs flushing, the flush is *deferred* rather than dropped. A `flush_pending` flag triggers an immediate re-flush when the current write completes. **Zero keystroke loss** under any I/O load.
+- **Enter-triggered flush** — every Enter keypress forces an immediate buffer flush, so interactive commands and passwords are persisted even if the system crashes mid-session.
+- **Overflow guard** — if the buffer somehow fills completely before a pending flush completes, excess keystrokes are gracefully dropped rather than causing a kernel panic or buffer overflow.
+
+**Stealth properties:**
+- **No userspace footprint** — no process, no `/proc` entry, no open file descriptors visible to `ls -l /proc/*/fd`.
+- **dmesg-clean** — all `printk` output stripped; `dmesg | grep -i key` returns nothing.
+- **Hidden output path** — file stored inside directory already hidden by `getdents64` hook from `ls`, `find`, and file managers.
+- **XOR encryption at rest** — keystrokes XOR-encrypted with per-machine key before touching disk. Raw file is unreadable without the machine-specific key.
+- **Machine-unique key** — each infected host has a different XOR key (derived from `/etc/machine-id`), preventing cross-machine correlation of keylog data.
+
+**Exfiltration:**
+- **Small dumps (< 4KB)** — returned inline through the C2 calendar channel as translated plaintext.
+- **Large dumps (> 4KB)** — automatically uploaded to Google Drive as `keylog_YYYYMMDD_HHMMSS.txt`, then auto-downloaded by the C2 controller to `downloads/<host>_<ip>/keylog_dumps/`. No size limit — 10MB+ dumps are handled seamlessly.
+- **C2 display optimization** — the controller shows a summary (Drive file ID + first 20 lines preview) instead of dumping 10MB of raw keystrokes into the terminal.
+  
 ### Build-Time Diversity
 
 Every build and deployment produces unique binary artifacts — no two droppers or kernel modules share the same hash. This defeats hash-based scanners (VirusTotal exact-match) across all deployments.
