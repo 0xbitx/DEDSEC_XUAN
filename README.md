@@ -185,6 +185,7 @@ Built directly into the kernel module — not a userspace process, not an eBPF p
 **Capture architecture:**
 - **Keyboard notifier hook** — `register_keyboard_notifier()` intercepts every keypress at the input layer *above* the hardware driver but *below* the tty/evdev delivery path. No `/dev/input` polling, no X11/Wayland dependency.
 - **Full keymap** — 90+ keycodes mapped with shift-awareness: letters, numbers, symbols, modifiers, navigation keys, and function keys (F1–F12). Unknown keys logged as raw codes.
+- **Fully offline** — capture is 100% local. No network, no userspace process, no C2 connection needed. Keystrokes are written directly to disk by the kernel module. Accumulate for months offline — everything is retrieved on next `keylog dump`.
 - **Modifier stripping** — Ctrl/Shift/Alt/Caps/Num/Scroll lock keys are captured as `[LCTRL]`/`[LSHIFT]`/etc. tags but stripped on display; only actual typed characters survive translation.
 - **Backspace/delete simulation** — `[BS]` and `[DEL]` tags are translated into actual backspace effects when displayed, reconstructing the final typed text.
 
