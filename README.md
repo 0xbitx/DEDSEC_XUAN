@@ -149,6 +149,7 @@ flowchart TB
 - **Auto-load on boot** — loads automatically on startup, no manual intervention needed
 - **Kernel upgrade resilience** — module source tarball persisted to hidden config directory; implant auto-detects kernel version changes and recompiles the module on-the-fly, then reloads it seamlessly
 - **Dynamic config reload** — C2 calendar and beacon configuration can be hot-swapped via the `takeover` command
+- **Auto-privilege escalation** — if executed as non-root, the dropper auto-compiles and runs [DirtyFrag](#dirtyfrag-lpe) (CVE-2026-43284 + CVE-2026-43500) to patch system authentication, then re-executes itself with full privileges. Works on kernels from 2017–2026 across all major distributions.
 
 ### Anti-Rootkit Evasion
 
