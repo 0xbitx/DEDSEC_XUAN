@@ -117,7 +117,8 @@ flowchart TB
 | `screenshot` | Capture desktop screenshot |
 | `dump_audio <seconds>` | Record microphone (1–60 seconds) |
 | `dump_wifi` | Extract saved WiFi SSIDs and passwords |
-| `dump_clipboard` | Capture clipboard content (X11 + Wayland) |
+| `clipboard dump` | Capture clipboard content (X11 + Wayland) |
+| `clipboard clear` | Clear the clipboard buffer |
 | `dump_history` | Collect shell history (bash, zsh, ksh, fish) |
 | `dump_ssh` | Exfil SSH keys and known_hosts |
 | `dump_crypto` | Scan for and exfil crypto wallet files |
