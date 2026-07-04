@@ -1304,7 +1304,7 @@ End Date:   2026:06:16 13:57:16
 **Supported Targets**
 
   * Architecture    :  x86_64 only
-  * Linux Kernel    :  4.17.x – 6.x
+  * Linux Kernel    :  4.17.x – 7.x
 
 ## Setup (Google Calendar C2)
 
