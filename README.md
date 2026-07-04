@@ -4,11 +4,11 @@
 </p>
 
 <h1 align="center">XUAN</h1>
-<p align="center"><code>Kernel-level Linux rootkit · 4.17–6.x · x86_64 · ftrace hooks (24) · Google C2 · Zero non-Google traffic · Self-rebuilds on kernel upgrade · Evades chkrootkit, rkhunter, and unhide</code></p>
+<p align="center"><code>Kernel-level Linux rootkit · 4.10–7.0 · x86_64 · ftrace hooks (24) · Google C2 · Zero non-Google traffic · Self-rebuilds on kernel upgrade · Evades chkrootkit, rkhunter, and unhide</code></p>
 
 ## DESCRIPTION
 
-XUAN is a kernel-level rootkit for modern Linux (4.17–6.x) that operates through ftrace-based syscall hooking. Unlike userland rootkits that can be detected by file integrity monitoring or process enumeration, XUAN embeds itself into the kernel's execution path — intercepting filesystem operations, process listings, and network socket enumeration before they reach userspace tools.
+XUAN is a kernel-level rootkit for modern Linux (4.10–7.0) that operates through ftrace-based syscall hooking. Unlike userland rootkits that can be detected by file integrity monitoring or process enumeration, XUAN embeds itself into the kernel's execution path — intercepting filesystem operations, process listings, and network socket enumeration before they reach userspace tools.
 
 Inspired by APT41's real-world tradecraft — specifically their use of Google Calendar as a command-and-control channel and their "living off the land" methodology — XUAN demonstrates how a sophisticated threat actor can blend into legitimate network traffic and evade traditional detection tools. This project serves as a defensive research tool to help SOC analysts and detection engineers understand modern rootkit capabilities and build effective countermeasures.
 
