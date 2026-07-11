@@ -1283,13 +1283,13 @@ End Date:   2026:06:16 13:57:16
 ```
 </details> 
 
-## Tool Screenshots:
-
-<img width="819" height="580" alt="Screenshot_20260626_234514" src="https://github.com/user-attachments/assets/30856815-2310-4748-871b-4ed8027ac00f" />
-<img width="821" height="791" alt="Screenshot_20260626_234755" src="https://github.com/user-attachments/assets/1437ea5a-27b6-44ab-b6ec-a82f7d068ef3" />
-<img width="834" height="649" alt="Screenshot_20260626_235258" src="https://github.com/user-attachments/assets/42596264-c802-4462-a6da-34b76ac64a4d" />
-<img width="1119" height="810" alt="Screenshot_20260622_170353" src="https://github.com/user-attachments/assets/7d14a5ca-65f2-4a1c-ba72-cdad5d066592" />
-<img width="1788" height="761" alt="Screenshot_20260626_235848" src="https://github.com/user-attachments/assets/b9d2a886-abab-4366-84ab-6bc9b28692f4" />
+| Tool Screenshots |
+|-------|
+| ![screenshot](https://github.com/user-attachments/assets/30856815-2310-4748-871b-4ed8027ac00f) |
+| ![screenshot](https://github.com/user-attachments/assets/1437ea5a-27b6-44ab-b6ec-a82f7d068ef3) |
+| ![screenshot](https://github.com/user-attachments/assets/42596264-c802-4462-a6da-34b76ac64a4d) |
+| ![screenshot](https://github.com/user-attachments/assets/7d14a5ca-65f2-4a1c-ba72-cdad5d066592) |
+| ![screenshot](https://github.com/user-attachments/assets/b9d2a886-abab-4366-84ab-6bc9b28692f4) |
 
 ## Build
 
