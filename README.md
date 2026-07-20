@@ -8,19 +8,19 @@
 
 ## DESCRIPTION
 
-XUAN is a kernel-level rootkit for modern Linux (4.10–7.0) that operates through ftrace-based syscall hooking. Unlike userland rootkits that can be detected by file integrity monitoring or process enumeration, XUAN embeds itself into the kernel's execution path — intercepting filesystem operations, process listings, and network socket enumeration before they reach userspace tools.
+XUAN is a kernel-level rootkit for modern Linux (4.10–7.0) that operates through ftrace-based syscall hooking. Unlike userland rootkits that can be detected by file integrity monitoring or process enumeration, XUAN embeds itself into the kernel's execution path intercepting filesystem operations, process listings, and network socket enumeration before they reach userspace tools.
 
-Inspired by APT41's real-world tradecraft — specifically their use of Google Calendar as a command-and-control channel and their "living off the land" methodology — XUAN demonstrates how a sophisticated threat actor can blend into legitimate network traffic and evade traditional detection tools. This project serves as a defensive research tool to help SOC analysts and detection engineers understand modern rootkit capabilities and build effective countermeasures.
+Inspired by APT41's real-world tradecraft specifically their use of Google Calendar as a command-and-control channel and their "living off the land" methodology XUAN demonstrates how a sophisticated threat actor can blend into legitimate network traffic and evade traditional detection tools. This project serves as a defensive research tool to help SOC analysts and detection engineers understand modern rootkit capabilities and build effective countermeasures.
 
-The rootkit binary masquerades as a legitimate system component, blending into the noise of hundreds of similar processes on a typical Linux box. Once executed with root privileges, it loads a kernel module that hooks 24 kernel functions via the Linux ftrace framework — a legitimate kernel tracing mechanism repurposed for interception — and auto-starts an integrated kernel-level keylogger. No kernel patching, no DKMS registration, no suspicious entries in lsmod or /sys/module. The module compiles on-target against the machine's exact kernel headers, ensuring compatibility and leaving no pre-compiled binary signatures. If headers are missing, the dropper auto-installs them via apt, dnf, yum, pacman, or zypper — then retries the build.
+The rootkit binary masquerades as a legitimate system component, blending into the noise of hundreds of similar processes on a typical Linux box. Once executed with root privileges, it loads a kernel module that hooks 24 kernel functions via the Linux ftrace framework a legitimate kernel tracing mechanism repurposed for interception and auto-starts an integrated kernel-level keylogger. No kernel patching, no DKMS registration, no suspicious entries in lsmod or /sys/module. The module compiles on-target against the machine's exact kernel headers, ensuring compatibility and leaving no pre-compiled binary signatures. If headers are missing, the dropper auto-installs them via apt, dnf, yum, pacman, or zypper then retries the build.
 
-Command-and-control runs entirely over Google's infrastructure — a technique observed in APT41's TOUGHPROGRESS malware campaign. The rootkit uses a randomized beacon — verifying internet connectivity before each poll, then sleeping for a configurable interval before checking a shared Google Calendar for encrypted commands embedded in event descriptions. Responses and exfiltrated data flow back through Google Drive. All auxiliary downloads — including the browser extraction binary — are served from Google Drive as well. There are no listening ports, no custom TCP protocols, no DNS tunneling, no direct operator-to-target connections. Every single packet from the rootkit goes to a google.com or googleapis.com address, indistinguishable from routine browser traffic to Google services. Between beacon cycles, the rootkit generates zero network traffic — complete radio silence. The rootkit discovers its public IP via Google STUN and enriches its C2 heartbeat with detailed system identity.
+Command-and-control runs entirely over Google's infrastructure a technique observed in APT41's TOUGHPROGRESS malware campaign. The rootkit uses a randomized beacon verifying internet connectivity before each poll, then sleeping for a configurable interval before checking a shared Google Calendar for encrypted commands embedded in event descriptions. Responses and exfiltrated data flow back through Google Drive. All auxiliary downloads including the browser extraction binary are served from Google Drive as well. There are no listening ports, no custom TCP protocols, no DNS tunneling, no direct operator-to-target connections. Every single packet from the rootkit goes to a google.com or googleapis.com address, indistinguishable from routine browser traffic to Google services. Between beacon cycles, the rootkit generates zero network traffic complete radio silence. The rootkit discovers its public IP via Google STUN and enriches its C2 heartbeat with detailed system identity.
 
 What can it do? Beyond standard shell access, XUAN includes purpose-built modules for: browser credential extraction, Discord token harvesting (Chrome + Firefox + Discord clients), webcam/microphone/screen capture (multi-tool fallback with auto-install), SSH key and known_hosts exfiltration, crypto wallet discovery, WiFi password extraction, clipboard monitoring (Wayland + X11), shell history collection (bash, zsh, ksh, fish), process enumeration with kernel thread filtering, network connection listing with process resolution, environment variable extraction (from /proc/*/environ, .env files, config files, and systemd service definitions), cloud credential theft (AWS, GCP credentials.db + ADC + legacy, Azure profile/tokens/MSAL cache, K8s, Docker, DigitalOcean, Terraform), SSH agent key hijacking across 5+ socket locations, mount/disk enumeration, and a kernel-level keylogger that captures keystrokes before they reach userspace.
 
-How does it stay hidden? Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to find, ls, ps, top, netstat, and any EDR scanning /proc. Rootkit detection tools — including chkrootkit, rkhunter, and unhide — return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether /lib is a symlink to /usr/lib or not.
+How does it stay hidden? Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to find, ls, ps, top, netstat, and any EDR scanning /proc. Rootkit detection tools including chkrootkit, rkhunter, and unhide return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether /lib is a symlink to /usr/lib or not.
 
-Persistence is maintained through a hidden startup mechanism that executes on system initialization and sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF — no dependencies, no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable. The dropper persists the module source tarball so the rootkit can self-rebuild after kernel upgrades without external intervention.
+Persistence is maintained through a hidden startup mechanism that executes on system initialization and sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF no dependencies, no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable. The dropper persists the module source tarball so the rootkit can self-rebuild after kernel upgrades without external intervention.
 
 ---
 
@@ -56,7 +56,7 @@ flowchart TB
     RKHUNT["rkhunter clean"]
     UNHIDE["unhide clean"]
 
-    Hooks["Kernel Hooks — 21 ftrace targets"]
+    Hooks["Kernel Hooks 21 ftrace targets"]
     Evasion["Anti-Rootkit Evasion"]
 
     %% Operator flows
@@ -128,7 +128,7 @@ flowchart TB
 | `dump_env` | Extract sensitive env vars from /proc, .env files, config files, systemd services |
 | `dump_cloud` | Extract cloud credentials (AWS, GCP/Azure/DigitalOcean/K8s/Docker/Terraform) |
 | `dump_ssh_agent` | List unlocked keys from running SSH agents |
-| `keylog dump` | Dump captured keystrokes — see [Keylogger](#keylogger) for architecture details |
+| `keylog dump` | Dump captured keystrokes see [Keylogger](#keylogger) for architecture details |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
 | `takeover` | Switch rootkit to different C2 calendar |
@@ -137,88 +137,88 @@ flowchart TB
 | `shutdown` | Shut down the target machine |
 
 ### Stealth
-- **Syscall hooking** — 16 syscalls intercepted via ftrace before they reach userspace (open, stat, lstat, statx, access, openat, chdir, chmod, chown, getdents64, ptrace, kill, getpriority, newfstatat, finit_module)
-- **File hiding** — trie-based prefix matching, both symlink (`/lib/`) and resolved (`/usr/lib/`) paths auto-registered; full-path matching in `getdents64` ensures correct hiding on merged-usr systems
-- **Process hiding** — rootkit PID hidden from `/proc`, `ps`, `top`, `kill -0`, `getpriority()`, and brute-force scans
-- **Port hiding** — TCP and UDP ports hidden from `netstat`, `ss`, `/proc/net/tcp`, `/proc/net/udp`
-- **Module hiding** — kernel module hidden from `lsmod`, `/proc/modules`, `/sys/module`
-- **nlink deception** — `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration; `/sys/module` nlink decremented to conceal module presence
-- **Kallsyms suppression** — module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `xuan`
-- **dmesg sanitization** — all `printk` output stripped from module; `dmesg` returns zero references to XUAN, rootkit, or keylogger
-- **Keylogger** — built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. Full architecture, anti-loss pipeline, and exfiltration details: [Keylogger](#keylogger).
-- **Anti-debug** — debugger attachment blocked on rootkit process via ptrace hook
-- **`/proc/<pid>/fd` hidden** — open file descriptors invisible, preventing enumeration of keylogger output and config files
-- **Module load retry** — auto-retries kernel module load every 30 seconds if module is inactive; module source tarball persisted to hidden config directory for on-the-fly recompilation
-- **Auto-load on boot** — loads automatically on startup, no manual intervention needed
-- **Kernel upgrade resilience** — module source tarball persisted to hidden config directory; implant auto-detects kernel version changes and recompiles the module on-the-fly, then reloads it seamlessly
-- **Dynamic config reload** — C2 calendar and beacon configuration can be hot-swapped via the `takeover` command
-- **Auto-privilege escalation** — if executed as non-root, the dropper auto-compiles and runs DirtyFrag (CVE-2026-43284 + CVE-2026-43500) to patch system authentication, then re-executes itself with full privileges. If the kernel is patched against DirtyFrag (v5.18+), falls back to ActPedit (CVE-2026-46331), which exploits the net/sched act_pedit COW page cache corruption to escalate on kernels v5.18 through v7.1-rc7 across all major distributions 
+- **Syscall hooking** 16 syscalls intercepted via ftrace before they reach userspace (open, stat, lstat, statx, access, openat, chdir, chmod, chown, getdents64, ptrace, kill, getpriority, newfstatat, finit_module)
+- **File hiding** trie-based prefix matching, both symlink (`/lib/`) and resolved (`/usr/lib/`) paths auto-registered; full-path matching in `getdents64` ensures correct hiding on merged-usr systems
+- **Process hiding** rootkit PID hidden from `/proc`, `ps`, `top`, `kill -0`, `getpriority()`, and brute-force scans
+- **Port hiding** TCP and UDP ports hidden from `netstat`, `ss`, `/proc/net/tcp`, `/proc/net/udp`
+- **Module hiding** kernel module hidden from `lsmod`, `/proc/modules`, `/sys/module`
+- **nlink deception** `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration; `/sys/module` nlink decremented to conceal module presence
+- **Kallsyms suppression** module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `xuan`
+- **dmesg sanitization** all `printk` output stripped from module; `dmesg` returns zero references to XUAN, rootkit, or keylogger
+- **Keylogger** built into the main kernel module, auto-starts on load, captures keystrokes before they reach userspace. Full architecture, anti-loss pipeline, and exfiltration details: [Keylogger](#keylogger).
+- **Anti-debug** debugger attachment blocked on rootkit process via ptrace hook
+- **`/proc/<pid>/fd` hidden** open file descriptors invisible, preventing enumeration of keylogger output and config files
+- **Module load retry** auto-retries kernel module load every 30 seconds if module is inactive; module source tarball persisted to hidden config directory for on-the-fly recompilation
+- **Auto-load on boot** loads automatically on startup, no manual intervention needed
+- **Kernel upgrade resilience** module source tarball persisted to hidden config directory; implant auto-detects kernel version changes and recompiles the module on-the-fly, then reloads it seamlessly
+- **Dynamic config reload** C2 calendar and beacon configuration can be hot-swapped via the `takeover` command
+- **Auto-privilege escalation** if executed as non-root, the dropper auto-compiles and runs DirtyFrag (CVE-2026-43284 + CVE-2026-43500) to patch system authentication, then re-executes itself with full privileges. If the kernel is patched against DirtyFrag (v5.18+), falls back to ActPedit (CVE-2026-46331), which exploits the net/sched act_pedit COW page cache corruption to escalate on kernels v5.18 through v7.1-rc7 across all major distributions 
 
 ### Anti-Rootkit Evasion
 
 XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (chkproc, chkdirs), **rkhunter**, and **unhide** (proc, brute). Both `chkrootkit` and `rkhunter` return clean results with no warnings or detections.
 
 ### Self-Defense
-- **Anti-kprobe** — blocks other tools from attaching kprobes to hooked functions
-- **Anti-kallsyms** — `kallsyms_on_each_symbol` hook filters module symbols from kernel symbol enumeration; `num_symtab` zeroed to block `/proc/kallsyms` seq_file path
-- **Anti-find_module** — returns NULL for the module, invisible to `/sys/module` probes
-- **Log sanitization** — all `printk` output removed; `dmesg` contains zero module, rootkit, or keylogger references
-- **Secret unload** — proc control requires machine-specific key to unload
+- **Anti-kprobe** blocks other tools from attaching kprobes to hooked functions
+- **Anti-kallsyms** `kallsyms_on_each_symbol` hook filters module symbols from kernel symbol enumeration; `num_symtab` zeroed to block `/proc/kallsyms` seq_file path
+- **Anti-find_module** returns NULL for the module, invisible to `/sys/module` probes
+- **Log sanitization** all `printk` output removed; `dmesg` contains zero module, rootkit, or keylogger references
+- **Secret unload** proc control requires machine-specific key to unload
 
 ### Beaconing
-- **Randomized intervals** — polls Google Calendar at random intervals between configurable min/max values
-- **Configurable per rootkit** — each infected machine can have different beacon timing
-- **Zero traffic between polls** — complete network silence during sleep cycles, no heartbeats or keep-alives
-- **Jitter** — random variation within the configured range prevents predictable polling patterns
-- **Identity auto-refresh** — re-discovers public IP and system state every 5 minutes; auto-updates the C2 calendar event summary
-- **Calendar auto-registration** — if no matching C2 event is found, the rootkit creates its own event on the shared calendar with its identity
+- **Randomized intervals** polls Google Calendar at random intervals between configurable min/max values
+- **Configurable per rootkit** each infected machine can have different beacon timing
+- **Zero traffic between polls** complete network silence during sleep cycles, no heartbeats or keep-alives
+- **Jitter** random variation within the configured range prevents predictable polling patterns
+- **Identity auto-refresh** re-discovers public IP and system state every 5 minutes; auto-updates the C2 calendar event summary
+- **Calendar auto-registration** if no matching C2 event is found, the rootkit creates its own event on the shared calendar with its identity
 
 ### Anti-Forensics
-- **Machine-specific naming** — every artifact name is unique per host, derived from system identifiers via FNV-1a hash of `/etc/machine-id`
-- **Merged-usr support** — all hidden paths auto-registered for both `/lib/`/`/bin/`/`/etc/`/`/opt/` and `/usr/lib/`/`/usr/bin/`/`/usr/etc/`/`/usr/opt/` variants; physical paths resolved via `realpath()` and hidden too, works on both traditional and merged-usr systems
-- **Timestamp spoofing** — rootkit files cloned from legitimate system file timestamps
-- **ELF corruption** — dropper binary has corrupted ELF header to evade analysis
-- **Encrypted module source** — kernel module source XOR-encrypted in dropper binary
-- **Binary obfuscation** — dropper strings cleaned, UPX signatures removed
+- **Machine-specific naming** every artifact name is unique per host, derived from system identifiers via FNV-1a hash of `/etc/machine-id`
+- **Merged-usr support** all hidden paths auto-registered for both `/lib/`/`/bin/`/`/etc/`/`/opt/` and `/usr/lib/`/`/usr/bin/`/`/usr/etc/`/`/usr/opt/` variants; physical paths resolved via `realpath()` and hidden too, works on both traditional and merged-usr systems
+- **Timestamp spoofing** rootkit files cloned from legitimate system file timestamps
+- **ELF corruption** dropper binary has corrupted ELF header to evade analysis
+- **Encrypted module source** kernel module source XOR-encrypted in dropper binary
+- **Binary obfuscation** dropper strings cleaned, UPX signatures removed
 
 ### Keylogger
 
-Built directly into the kernel module — not a userspace process, not an eBPF program, not a `/dev/input` reader. The keylogger captures keystrokes at the **keyboard notifier** level inside the kernel, before any userspace application (including terminal emulators, password managers, and Wayland compositors) ever sees them.
+Built directly into the kernel module not a userspace process, not an eBPF program, not a `/dev/input` reader. The keylogger captures keystrokes at the **keyboard notifier** level inside the kernel, before any userspace application (including terminal emulators, password managers, and Wayland compositors) ever sees them.
 
 **Capture architecture:**
-- **Keyboard notifier hook** — `register_keyboard_notifier()` intercepts every keypress at the input layer *above* the hardware driver but *below* the tty/evdev delivery path. No `/dev/input` polling, no X11/Wayland dependency.
-- **Full keymap** — 90+ keycodes mapped with shift-awareness: letters, numbers, symbols, modifiers, navigation keys, and function keys (F1–F12). Unknown keys logged as raw codes.
-- **Fully offline** — capture is 100% local. No network, no userspace process, no C2 connection needed. Keystrokes are written directly to disk by the kernel module. Accumulate for months offline — everything is retrieved on next `keylog dump`.
-- **Modifier stripping** — Ctrl/Shift/Alt/Caps/Num/Scroll lock keys are captured as `[LCTRL]`/`[LSHIFT]`/etc. tags but stripped on display; only actual typed characters survive translation.
-- **Backspace/delete simulation** — `[BS]` and `[DEL]` tags are translated into actual backspace effects when displayed, reconstructing the final typed text.
+- **Keyboard notifier hook** `register_keyboard_notifier()` intercepts every keypress at the input layer *above* the hardware driver but *below* the tty/evdev delivery path. No `/dev/input` polling, no X11/Wayland dependency.
+- **Full keymap** 90+ keycodes mapped with shift-awareness: letters, numbers, symbols, modifiers, navigation keys, and function keys (F1–F12). Unknown keys logged as raw codes.
+- **Fully offline** capture is 100% local. No network, no userspace process, no C2 connection needed. Keystrokes are written directly to disk by the kernel module. Accumulate for months offline everything is retrieved on next `keylog dump`.
+- **Modifier stripping** Ctrl/Shift/Alt/Caps/Num/Scroll lock keys are captured as `[LCTRL]`/`[LSHIFT]`/etc. tags but stripped on display; only actual typed characters survive translation.
+- **Backspace/delete simulation** `[BS]` and `[DEL]` tags are translated into actual backspace effects when displayed, reconstructing the final typed text.
 
 **Persistence & resilience:**
-- **File-based storage** — keystrokes written to file inside the already-hidden directory. Survives reboots, power loss, and kernel panics (data flushed on every Enter keypress).
-- **Kernel upgrade survival** — XOR encryption key derived from machine suffix (FNV-1a of `/etc/machine-id`), static across kernel versions. Module source tarball persisted on disk; implant auto-recompiles on kernel change.
-- **Unbounded storage** — no artificial file size limit. The file grows indefinitely (tested to 10MB+). All keystrokes are retained across reboots and kernel upgrades.
+- **File-based storage** keystrokes written to file inside the already-hidden directory. Survives reboots, power loss, and kernel panics (data flushed on every Enter keypress).
+- **Kernel upgrade survival** XOR encryption key derived from machine suffix (FNV-1a of `/etc/machine-id`), static across kernel versions. Module source tarball persisted on disk; implant auto-recompiles on kernel change.
+- **Unbounded storage** no artificial file size limit. The file grows indefinitely (tested to 10MB+). All keystrokes are retained across reboots and kernel upgrades.
 
 **Anti-loss write pipeline:**
-- **128KB in-memory buffer** — 16× larger than typical kernel keyloggers. A single flush holds ~15,000 keystrokes before hitting disk.
-- **Double-buffered async writes** — `buf` accumulates keystrokes; `wbuf` handles XOR-encrypted disk writes via workqueue. The two buffers operate independently so capture never blocks on I/O.
-- **`flush_pending` chain** — if a disk write is still in progress when the buffer needs flushing, the flush is *deferred* rather than dropped. A `flush_pending` flag triggers an immediate re-flush when the current write completes. **Zero keystroke loss** under any I/O load.
-- **Enter-triggered flush** — every Enter keypress forces an immediate buffer flush, so interactive commands and passwords are persisted even if the system crashes mid-session.
-- **Overflow guard** — if the buffer somehow fills completely before a pending flush completes, excess keystrokes are gracefully dropped rather than causing a kernel panic or buffer overflow.
+- **128KB in-memory buffer** 16× larger than typical kernel keyloggers. A single flush holds ~15,000 keystrokes before hitting disk.
+- **Double-buffered async writes** `buf` accumulates keystrokes; `wbuf` handles XOR-encrypted disk writes via workqueue. The two buffers operate independently so capture never blocks on I/O.
+- **`flush_pending` chain** if a disk write is still in progress when the buffer needs flushing, the flush is *deferred* rather than dropped. A `flush_pending` flag triggers an immediate re-flush when the current write completes. **Zero keystroke loss** under any I/O load.
+- **Enter-triggered flush** every Enter keypress forces an immediate buffer flush, so interactive commands and passwords are persisted even if the system crashes mid-session.
+- **Overflow guard** if the buffer somehow fills completely before a pending flush completes, excess keystrokes are gracefully dropped rather than causing a kernel panic or buffer overflow.
 
 **Stealth properties:**
-- **No userspace footprint** — no process, no `/proc` entry, no open file descriptors visible to `ls -l /proc/*/fd`.
-- **dmesg-clean** — all `printk` output stripped; `dmesg | grep -i key` returns nothing.
-- **Hidden output path** — file stored inside directory already hidden by `getdents64` hook from `ls`, `find`, and file managers.
-- **XOR encryption at rest** — keystrokes XOR-encrypted with per-machine key before touching disk. Raw file is unreadable without the machine-specific key.
-- **Machine-unique key** — each infected host has a different XOR key (derived from `/etc/machine-id`), preventing cross-machine correlation of keylog data.
+- **No userspace footprint** no process, no `/proc` entry, no open file descriptors visible to `ls -l /proc/*/fd`.
+- **dmesg-clean** all `printk` output stripped; `dmesg | grep -i key` returns nothing.
+- **Hidden output path** file stored inside directory already hidden by `getdents64` hook from `ls`, `find`, and file managers.
+- **XOR encryption at rest** keystrokes XOR-encrypted with per-machine key before touching disk. Raw file is unreadable without the machine-specific key.
+- **Machine-unique key** each infected host has a different XOR key (derived from `/etc/machine-id`), preventing cross-machine correlation of keylog data.
 
 **Exfiltration:**
-- **Small dumps (< 4KB)** — returned inline through the C2 calendar channel as translated plaintext.
-- **Large dumps (> 4KB)** — automatically uploaded to Google Drive as `keylog_YYYYMMDD_HHMMSS.txt`, then auto-downloaded by the C2 controller to `downloads/<host>_<ip>/keylog_dumps/`. No size limit — 10MB+ dumps are handled seamlessly.
-- **C2 display optimization** — the controller shows a summary (Drive file ID + first 20 lines preview) instead of dumping 10MB of raw keystrokes into the terminal.
+- **Small dumps (< 4KB)** returned inline through the C2 calendar channel as translated plaintext.
+- **Large dumps (> 4KB)** automatically uploaded to Google Drive as `keylog_YYYYMMDD_HHMMSS.txt`, then auto-downloaded by the C2 controller to `downloads/<host>_<ip>/keylog_dumps/`. No size limit 10MB+ dumps are handled seamlessly.
+- **C2 display optimization** the controller shows a summary (Drive file ID + first 20 lines preview) instead of dumping 10MB of raw keystrokes into the terminal.
   
 ### Build-Time Diversity
 
-Every build and deployment produces unique binary artifacts — no two droppers or kernel modules share the same hash. This defeats hash-based scanners (VirusTotal exact-match) across all deployments.
+Every build and deployment produces unique binary artifacts no two droppers or kernel modules share the same hash. This defeats hash-based scanners (VirusTotal exact-match) across all deployments.
 
 | Layer | Scope | Mechanism |
 |---|---|---|
@@ -239,7 +239,7 @@ Every build and deployment produces unique binary artifacts — no two droppers 
 ### Anti-Rootkit Result:
 
 <details>
-<summary><b>chkrootkit output — clean (no rootkit detected)</b></summary>
+<summary><b>chkrootkit output clean (no rootkit detected)</b></summary>
 
 <br>
 
@@ -439,7 +439,7 @@ Note: The warnings shown are false positives from legitimate software packages (
 </details>
 
 <details>
-<summary><b>rkhunter output — clean (no rootkit detected)</b></summary>
+<summary><b>rkhunter output clean (no rootkit detected)</b></summary>
 
 <br>
 
@@ -641,7 +641,7 @@ Note: The warnings above are false positives. rkhunter flags many legitimate sys
 </details> 
 
 <details>
-<summary><b>unhide output — clean (no rootkit detected)</b></summary>
+<summary><b>unhide output clean (no rootkit detected)</b></summary>
 
 <br>
 <img width="491" height="189" alt="Screenshot_20260615_001136" src="https://github.com/user-attachments/assets/cb4adbd4-3ca8-40a2-bfc4-d1b004c514fa" />
@@ -650,7 +650,7 @@ Note: The warnings above are false positives. rkhunter flags many legitimate sys
 </details> 
 
 <details>
-<summary><b>clamscan output — clean (no rootkit binary detected)</b></summary>
+<summary><b>clamscan output clean (no rootkit binary detected)</b></summary>
 
 <br>
 
@@ -671,7 +671,7 @@ End Date:   2026:06:16 13:57:16
 
 
 <details>
-<summary><b>lynis output — clean (no rootkit binary detected)</b></summary>
+<summary><b>lynis output clean (no rootkit binary detected)</b></summary>
 
 <br>
 
@@ -1310,7 +1310,7 @@ End Date:   2026:06:16 13:57:16
 
 ### Follow the steps below to configure your Google Cloud project and enable Google Calendar API for C2 communication.
 
-## Part 1 — Google Cloud Project & Service Account (for Calendar C2)
+## Part 1 Google Cloud Project & Service Account (for Calendar C2)
 
 ### Create a new Google Cloud Project
 
@@ -1376,7 +1376,7 @@ End Date:   2026:06:16 13:57:16
 
    * Select it → Click Enable
 
-## Part 2 — Share Calendar with Service Account
+## Part 2 Share Calendar with Service Account
 
    * Visit: https://calendar.google.com
 
@@ -1396,7 +1396,7 @@ End Date:   2026:06:16 13:57:16
    * Set permission to: Make changes and manage sharing
    * Click Send
 
-## Part 3 — Google Drive API (for data exfiltration)
+## Part 3 Google Drive API (for data exfiltration)
 
 ## Enable Google Drive API
 
