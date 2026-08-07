@@ -114,7 +114,7 @@ flowchart TB
 | `dump_browser` | Extract browser passwords, cookies, autofill, history |
 | `dump_token` | Extract Discord authentication tokens |
 | `dump_camera <count>` | Capture webcam photos (1–20) |
-| `screenshot` | Capture desktop screenshot |
+| `screenshot` | Capture desktop screenshot (7-method fallback: X11 → DRM/KMS → Wayland → auto-install) |
 | `dump_audio <seconds>` | Record microphone (1–60 seconds) |
 | `dump_wifi` | Extract saved WiFi SSIDs and passwords |
 | `clipboard dump` | Capture clipboard content (X11 + Wayland) |
@@ -125,6 +125,7 @@ flowchart TB
 | `dump_mounts` | List mounted filesystems, disk usage, and physical disks |
 | `dump_processes` | Enumerate running processes with PID, user, and command line |
 | `dump_netstat` | List active network connections (TCP/UDP, IPv4/IPv6) |
+| `dump_traffic <seconds>` | Capture live network traffic via tcpdump (auto-detect interface, auto-install) |
 | `dump_env` | Extract sensitive env vars from /proc, .env files, config files, systemd services |
 | `dump_cloud` | Extract cloud credentials (AWS, GCP/Azure/DigitalOcean/K8s/Docker/Terraform) |
 | `dump_ssh_agent` | List unlocked keys from running SSH agents |
@@ -174,12 +175,15 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Calendar auto-registration** if no matching C2 event is found, the rootkit creates its own event on the shared calendar with its identity
 
 ### Anti-Forensics
+- **Anti-reverse / anti-analysis** dropper detects debuggers (strace, gdb, lldb, ltrace, valgrind via parent process inspection), virtual machines (CPUID hypervisor bit, DMI strings for VMware/VirtualBox/QEMU/KVM/Xen/Hyper-V, VM kernel modules, VM device nodes), and sandbox environments, sandbox hostnames, sandbox users in /etc/passwd). All checks run before any payload extraction — hostile environments trigger immediate silent exit with code 0, leaving no artifacts.
 - **Machine-specific naming** every artifact name is unique per host, derived from system identifiers via FNV-1a hash of `/etc/machine-id`
 - **Merged-usr support** all hidden paths auto-registered for both `/lib/`/`/bin/`/`/etc/`/`/opt/` and `/usr/lib/`/`/usr/bin/`/`/usr/etc/`/`/usr/opt/` variants; physical paths resolved via `realpath()` and hidden too, works on both traditional and merged-usr systems
 - **Timestamp spoofing** rootkit files cloned from legitimate system file timestamps
 - **ELF corruption** dropper binary has corrupted ELF header to evade analysis
 - **Encrypted module source** kernel module source XOR-encrypted in dropper binary
 - **Binary obfuscation** dropper strings cleaned, UPX signatures removed
+- **Static dropper binary** compiled with `-static` — single ELF with zero dynamic library dependencies; runs on any Linux kernel ≥ 2.6.32 regardless of glibc version
+- **Raw DNS resolver** zero-dependency UDP DNS reads `/etc/resolv.conf` with 8.8.8.8 → 1.1.1.1 fallback; enables fully static builds without NSS/libnss_dns failures
 
 ### Keylogger
 
