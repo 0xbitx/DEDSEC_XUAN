@@ -110,7 +110,7 @@ flowchart TB
 | `cd`, `pwd`, `ls` ... | Full shell access via startup context |
 | `upload <file_dir> <dest_dir>` | Download file/folder from Drive to target path |
 | `download <path>` | Tar and exfil file/directory from target to Drive |
-| `execute <file_dir>` | Download Python script from Drive by file_id, run on target |
+| `execute <file_id>` | Run code on target: auto-detects Python (.py), Shell (.sh), Perl (.pl), Ruby (.rb), Lua (.lua), ELF binaries (.bin/.elf). Shebang scripts executed directly. ELF binaries run filelessly via memfd+fexecve with spoofed process name. |
 | `dump_browser` | Extract browser passwords, cookies, autofill, history |
 | `dump_token` | Extract Discord authentication tokens |
 | `dump_camera <count>` | Capture webcam photos (1–20) |
@@ -175,7 +175,7 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Calendar auto-registration** if no matching C2 event is found, the rootkit creates its own event on the shared calendar with its identity
 
 ### Anti-Forensics
-- **Anti-reverse / anti-analysis** dropper detects debuggers (strace, gdb, lldb, ltrace, valgrind via parent process inspection), virtual machines (CPUID hypervisor bit, DMI strings for VMware/VirtualBox/QEMU/KVM/Xen/Hyper-V, VM kernel modules, VM device nodes), and sandbox environments, sandbox hostnames, sandbox users in /etc/passwd). All checks run before any payload extraction — hostile environments trigger immediate silent exit with code 0, leaving no artifacts.
+- **Anti-reverse / anti-analysis** dropper detects debuggers (strace, gdb, lldb, ltrace, valgrind via parent process inspection), virtual machines (CPUID hypervisor bit, DMI strings for VMware/VirtualBox/QEMU/KVM/Xen/Hyper-V, VM kernel modules, VM device nodes), and sandbox environments (uptime < 10 min, disk < 20 GB, RAM < 1 GB, single CPU, sandbox hostnames, sandbox users in /etc/passwd). All checks run before any payload extraction — hostile environments trigger immediate silent exit with code 0, leaving no artifacts.
 - **Machine-specific naming** every artifact name is unique per host, derived from system identifiers via FNV-1a hash of `/etc/machine-id`
 - **Merged-usr support** all hidden paths auto-registered for both `/lib/`/`/bin/`/`/etc/`/`/opt/` and `/usr/lib/`/`/usr/bin/`/`/usr/etc/`/`/usr/opt/` variants; physical paths resolved via `realpath()` and hidden too, works on both traditional and merged-usr systems
 - **Timestamp spoofing** rootkit files cloned from legitimate system file timestamps
@@ -183,7 +183,8 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Encrypted module source** kernel module source XOR-encrypted in dropper binary
 - **Binary obfuscation** dropper strings cleaned, UPX signatures removed
 - **Static dropper binary** compiled with `-static` — single ELF with zero dynamic library dependencies; runs on any Linux kernel ≥ 2.6.32 regardless of glibc version
-- **Raw DNS resolver** zero-dependency UDP DNS reads `/etc/resolv.conf` with 8.8.8.8 → 1.1.1.1 fallback; enables fully static builds without NSS/libnss_dns failures
+- **Raw DNS resolver** zero-dependency UDP DNS (`dns.cpp`) reads `/etc/resolv.conf` with 8.8.8.8 → 1.1.1.1 fallback; enables fully static builds without NSS/libnss_dns failures
+- **Standardized C2 output** all commands produce consistent `[command_name]\n  Key : Value` block format for reliable machine parsing
 
 ### Keylogger
 
