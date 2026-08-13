@@ -110,7 +110,7 @@ flowchart TB
 | `cd`, `pwd`, `ls` ... | Full shell access via startup context |
 | `upload <file_dir> <dest_dir>` | Download file/folder from Drive to target path |
 | `download <path>` | Tar and exfil file/directory from target to Drive |
-| `execute <file_id>` | Run code on target: auto-detects Python (.py), Shell (.sh), Perl (.pl), Ruby (.rb), Lua (.lua), ELF binaries (.bin/.elf). Shebang scripts executed directly. ELF binaries run filelessly via memfd+fexecve with spoofed process name. |
+| `execute <path>` | Run code on target: auto-detects Python (.py), Shell (.sh), Perl (.pl), Ruby (.rb), Lua (.lua), ELF binaries (.bin/.elf). ELF binaries run filelessly via memfd+fexecve with spoofed process name. |
 | `dump_browser` | Extract browser passwords, cookies, autofill, history |
 | `dump_token` | Extract Discord authentication tokens |
 | `dump_camera <count>` | Capture webcam photos (1–20) |
@@ -132,6 +132,7 @@ flowchart TB
 | `keylog dump` | Dump captured keystrokes see [Keylogger](#keylogger) for architecture details |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
+| `hibernate <duration>` | Stop all C2 traffic and processing — 30m, 1h, 5h, 24h, 1d, 5d, 1w. |
 | `takeover` | Switch rootkit to different C2 calendar |
 | `update_token` | Refresh Google Drive API token |
 | `reboot` | Reboot the target machine |
