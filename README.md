@@ -1289,6 +1289,12 @@ End Date:   2026:06:16 13:57:16
 ```
 </details> 
 
+### Detect It Easy Result:
+
+| Screenshot |
+|-------|
+| ![screenshot](https://github.com/user-attachments/assets/faeaf318-b185-457c-9baf-594015982039) |
+
 | Tool Screenshots |
 |-------|
 | ![screenshot](https://github.com/user-attachments/assets/30856815-2310-4748-871b-4ed8027ac00f) |
