@@ -123,7 +123,7 @@ flowchart TB
 | `dump_ssh` | Exfil SSH keys and known_hosts |
 | `dump_crypto` | Scan for and exfil crypto wallet files |
 | `dump_mounts` | List mounted filesystems, disk usage, and physical disks |
-| `dump_processes` | Enumerate running processes with PID, user, and command line |
+| `dump_process` | Enumerate running processes with PID, user, and command line |
 | `dump_netstat` | List active network connections (TCP/UDP, IPv4/IPv6) |
 | `dump_traffic <seconds>` | Capture live network traffic via tcpdump (auto-detect interface, auto-install) |
 | `dump_env` | Extract sensitive env vars from /proc, .env files, config files, systemd services |
