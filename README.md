@@ -1295,6 +1295,12 @@ End Date:   2026:06:16 13:57:16
 |-------|
 | ![screenshot](https://github.com/user-attachments/assets/faeaf318-b185-457c-9baf-594015982039) |
 
+### UPX Result:
+
+| Screenshot |
+|-------|
+| ![screenshot](https://github.com/user-attachments/assets/d29bf1c7-7cb0-4cb4-9c97-a97b3f20be2e) |
+
 | Tool Screenshots |
 |-------|
 | ![screenshot](https://github.com/user-attachments/assets/30856815-2310-4748-871b-4ed8027ac00f) |
