@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/9b8831a3-4285-40fa-b59e-f3465f5b7e69", width="400", height="400">
+<img src="https://github.com/user-attachments/assets/f16da73c-08f4-4308-aa87-3ed8d7f72090", width="400", height="400">
 </p>
 
 <h1 align="center">XUAN</h1>
