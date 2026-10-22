@@ -1,18 +1,18 @@
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/f16da73c-08f4-4308-aa87-3ed8d7f72090", width="400", height="400">
+<img src="https://github.com/user-attachments/assets/9b8831a3-4285-40fa-b59e-f3465f5b7e69" width="400" height="400">
 </p>
 
 <h1 align="center">XUAN</h1>
-<p align="center"><code>Kernel-level Linux rootkit · 4.10–7.1 · x86_64 · ftrace hooks (24) · Google C2 · Zero non-Google traffic · Self-rebuilds on kernel upgrade · Evades chkrootkit, rkhunter, and unhide</code></p>
+<p align="center"><code>Kernel-level Linux rootkit · 4.17.x to 7.x · x86_64 · ftrace hooks (26) · Google C2 · Zero non-Google traffic · Self-rebuilds on kernel upgrade · Evades chkrootkit, rkhunter, and unhide</code></p>
 
 ## DESCRIPTION
 
-XUAN is a kernel-level rootkit for modern Linux (4.10–7.1) that operates through ftrace-based syscall hooking. Unlike userland rootkits that can be detected by file integrity monitoring or process enumeration, XUAN embeds itself into the kernel's execution path intercepting filesystem operations, process listings, and network socket enumeration before they reach userspace tools.
+XUAN is a kernel-level rootkit for modern Linux (4.17.x to 7.x) that operates through ftrace-based syscall hooking. Unlike userland rootkits that can be detected by file integrity monitoring or process enumeration, XUAN embeds itself into the kernel's execution path intercepting filesystem operations, process listings, and network socket enumeration before they reach userspace tools.
 
 Inspired by APT41's real-world tradecraft specifically their use of Google Calendar as a command-and-control channel and their "living off the land" methodology XUAN demonstrates how a sophisticated threat actor can blend into legitimate network traffic and evade traditional detection tools. This project serves as a defensive research tool to help SOC analysts and detection engineers understand modern rootkit capabilities and build effective countermeasures.
 
-The rootkit binary masquerades as a legitimate system component, blending into the noise of hundreds of similar processes on a typical Linux box. Once executed with root privileges, it loads a kernel module that hooks 24 kernel functions via the Linux ftrace framework a legitimate kernel tracing mechanism repurposed for interception and auto-starts an integrated kernel-level keylogger. No kernel patching, no DKMS registration, no suspicious entries in lsmod or /sys/module. The module compiles on-target against the machine's exact kernel headers, ensuring compatibility and leaving no pre-compiled binary signatures. If headers are missing, the dropper auto-installs them via apt, dnf, yum, pacman, or zypper then retries the build.
+The rootkit binary masquerades as a legitimate system component, blending into the noise of hundreds of similar processes on a typical Linux box. Once executed with root privileges, it loads a kernel module that hooks 26 kernel functions via the Linux ftrace framework, a legitimate kernel tracing mechanism repurposed for interception, and auto-starts an integrated kernel-level keylogger. No kernel patching, no DKMS registration, no suspicious entries in lsmod or /sys/module. The module compiles on-target against the machine's exact kernel headers, ensuring compatibility and leaving no pre-compiled binary signatures. If headers are missing, the dropper auto-installs them via apt, dnf, yum, pacman, or zypper then retries the build.
 
 Command-and-control runs entirely over Google's infrastructure a technique observed in APT41's TOUGHPROGRESS malware campaign. The rootkit uses a randomized beacon verifying internet connectivity before each poll, then sleeping for a configurable interval before checking a shared Google Calendar for encrypted commands embedded in event descriptions. Responses and exfiltrated data flow back through Google Drive. All auxiliary downloads including the browser extraction binary are served from Google Drive as well. There are no listening ports, no custom TCP protocols, no DNS tunneling, no direct operator-to-target connections. Every single packet from the rootkit goes to a google.com or googleapis.com address, indistinguishable from routine browser traffic to Google services. Between beacon cycles, the rootkit generates zero network traffic complete radio silence. The rootkit discovers its public IP via Google STUN and enriches its C2 heartbeat with detailed system identity.
 
@@ -20,86 +20,109 @@ What can it do? Beyond standard shell access, XUAN includes purpose-built module
 
 How does it stay hidden? Every installed artifact is machine-specific. No two infected machines share the same binary name, module path, persistence entry, or config directory. File timestamps are cloned from legitimate system files to resist forensic timeline analysis. The kernel module auto-hides all rootkit paths on every boot and whitelists its own PID so the rootkit can read its configuration while remaining invisible to find, ls, ps, top, netstat, and any EDR scanning /proc. Rootkit detection tools including chkrootkit, rkhunter, and unhide return clean results with zero warnings. Full merged-usr support ensures paths are correctly hidden whether /lib is a symlink to /usr/lib or not.
 
-Persistence is maintained through a hidden startup mechanism that executes on system initialization and sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF no dependencies, no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable. The dropper persists the module source tarball so the rootkit can self-rebuild after kernel upgrades without external intervention.
+Persistence is maintained through a hidden startup mechanism that executes on system initialization and sources the user's shell profiles so environment variables propagate correctly. The dropper binary is a single statically-linked ELF with no dependencies and no package manager noise beyond optional kernel header installation. Between the machine-specific naming, timestamp cloning, ELF header corruption, and binary obfuscation, static analysis of the dropper yields nothing actionable. The rootkit persists the module source tarball so it can self-rebuild after kernel upgrades without external intervention.
 
 ---
 
 ## Architecture
 ```mermaid
 flowchart TB
-    Operator["🖥️  Operator"]
-    CTRL["Controller"]
-    DROP["Dropper (static ELF)"]
+    Operator["Operator"]
+    CTRL["Controller<br/>dedsec_xuan"]
+    DROP["Dropper<br/>static ELF"]
+    ANTI["Anti-Analysis<br/>debugger, VM and sandbox checks"]
+    LPE["Privilege Escalation<br/>DirtyFrag / ActPedit fallback"]
 
-    Google["☁️  Google Infrastructure"]
-    CAL["Google Calendar<br/>C2 Channel"]
-    DRV["Google Drive<br/>Data Exfil"]
-    OAUTH["OAuth2<br/>Token Refresh"]
+    subgraph Google["Google Infrastructure"]
+        CAL["Google Calendar<br/>encrypted C2 commands"]
+        DRV["Google Drive<br/>data exfil and staging"]
+        OAUTH["OAuth2<br/>token refresh"]
+    end
 
-    Target["Target Machine"]
+    subgraph Target["Target Machine"]
+        HOOKS["ftrace Kernel Hooks (26 targets)<br/>15 syscall, 4 socket enumeration<br/>1 capture, 6 self-defense"]
+        SYS["Userspace Tools<br/>ls, find, ps, top, ss, netstat, tcpdump"]
+        IMP["Implant Binary<br/>randomized beacon loop"]
+        CFG["Hidden Config<br/>token and state"]
+        MOD["Kernel Module<br/>.ko"]
+        BUILD["On-Target Build<br/>header auto-install<br/>source recompile"]
+        CRON["Boot Persistence<br/>cron @reboot"]
+        BEACON["Sleep Cycle<br/>5-30s randomized<br/>zero traffic between polls"]
 
-    IMP["Implant Binary"]
-    CFG["Config + Token"]
-    KO["Kernel Module (.ko)"]
-    CRON["Boot Persistence"]
-    BEACON["Randomized Beacon<br/>5-30s sleep"]
+        subgraph HK["ftrace Hook Groups"]
+            FS["File and Path Hiding<br/>open, stat, lstat, statx<br/>access, openat, chdir<br/>chmod, chown, getdents64<br/>finit_module"]
+            PROC["Process Hiding<br/>kill, getpriority, ptrace"]
+            NET["Port Hiding<br/>tcp4, tcp6, udp4, udp6 seq_show"]
+            NLINK["nlink Deception<br/>stat, lstat, newfstatat, statx"]
+            KALL["Kallsyms Suppression<br/>kallsyms_on_each_symbol<br/>symbol table zeroed"]
+            SD["Self-Defense<br/>register_kprobe, find_module<br/>__module_address, ftrace_free_mem<br/>module list and sysfs hiding"]
+            BPF["BPF Object Hiding<br/>__x64_sys_bpf"]
+            CAP["Capture Hiding<br/>tpacket_rcv<br/>implant flows dropped"]
+        end
 
-    FS["File Hiding<br/>open/stat/getdents64/statx"]
-    PROC["Process Hiding<br/>kill/getpriority/ptrace"]
-    NET["Port Hiding<br/>tcp4/tcp6_seq_show"]
-    NLINK["nlink Deception<br/>stat/lstat/newfstatat"]
-    KALL["Kallsyms Suppression"]
-    SD["Self-Defense<br/>kprobe/find_module"]
+        KL["Kernel Keylogger<br/>keyboard notifier<br/>XOR at rest"]
+        CMD["Command Handler<br/>shell, file transfer<br/>credential and recon modules"]
+        UNLOAD["Unload Control<br/>keyed proc entry"]
+    end
 
-    CHKPROC["chkproc bypassed"]
-    CHKDIRS["chkdirs bypassed"]
-    RKHUNT["rkhunter clean"]
-    UNHIDE["unhide clean"]
+    subgraph Evasion["Anti-Rootkit Evasion"]
+        CHKPROC["chkproc bypassed"]
+        CHKDIRS["chkdirs bypassed"]
+        RKHUNT["rkhunter clean"]
+        UNHIDE["unhide clean"]
+    end
 
-    Hooks["Kernel Hooks 21 ftrace targets"]
-    Evasion["Anti-Rootkit Evasion"]
-
-    %% Operator flows
+    %% Operator and deployment flows
     CTRL -->|build dropper| DROP
-    DROP -->|deploy artifacts| Target
-    CTRL -->|write encrypted cmd| CAL
+    CTRL -->|write encrypted command| CAL
+    DROP -->|anti-analysis check| ANTI
+    DROP -->|if unprivileged| LPE
+    LPE -->|re-exec as root| DROP
+    DROP -->|install| IMP
+    DROP -->|write| CFG
+    DROP -->|install| CRON
+    DROP -->|extract module source| BUILD
 
     %% Google flows
-    CAL -->|poll every beacon| IMP
+    CAL -->|poll command| IMP
     IMP -->|sleep| BEACON
-    BEACON -->|wake & poll| IMP
+    BEACON -->|wake and poll| IMP
     IMP -->|exfil data| DRV
     DRV -->|download results| CTRL
     IMP -->|refresh token| OAUTH
+    OAUTH -->|access token| DRV
 
     %% Target internal
-    IMP -->|read config| CFG
-    IMP -->|load| KO
+    BUILD -->|compile| MOD
+    IMP -->|read| CFG
+    IMP -->|load and retry| MOD
     CRON -->|auto-start on boot| IMP
-
-    %% Hooks assembly (no arrows, just grouping)
-    KO -->|hooks| Hooks
-    Hooks --> FS
-    Hooks --> PROC
-    Hooks --> NET
-    Hooks --> NLINK
-    Hooks --> KALL
-    Hooks --> SD
+    IMP -->|dispatch| CMD
+    MOD -->|install| HOOKS
+    HOOKS --> FS
+    HOOKS --> PROC
+    HOOKS --> NET
+    HOOKS --> NLINK
+    HOOKS --> KALL
+    HOOKS --> SD
+    HOOKS --> BPF
+    HOOKS --> CAP
+    MOD -->|start| KL
+    UNLOAD -->|unload| MOD
 
     %% Hook effects
-    FS -->|hide files| Target
-    PROC -->|hide PIDs| Target
-    NET -->|hide ports| Target
-    NLINK -->|evade detection| Target
-    KALL -->|zero entries| Target
-    SD -->|block introspection| Target
+    FS -->|hide files and paths| SYS
+    PROC -->|hide PIDs| SYS
+    NET -->|hide ports| SYS
+    NLINK -->|mask link counts| SYS
+    KALL -->|hide symbols| SYS
+    SD -->|block introspection| SYS
+    BPF -->|hide BPF objects| SYS
+    CAP -->|drop capture copy| SYS
+    KL -->|capture keystrokes| SYS
 
     %% Evasion
-    Hooks -->|defeats| Evasion
-    Evasion --> CHKPROC
-    Evasion --> CHKDIRS
-    Evasion --> RKHUNT
-    Evasion --> UNHIDE
+    HK -->|defeat| Evasion
 ```
 
 ## Features
@@ -108,23 +131,25 @@ flowchart TB
 | Command | Description |
 |---|---|
 | `cd`, `pwd`, `ls` ... | Full shell access via startup context |
-| `upload <file_dir> <dest_dir>` | Download file/folder from Drive to target path |
+| `upload <file_id> <dest_path>` | Download a single file from Drive to a target path |
+| `upload_dir <file_id> <dest_path>` | Download a tar archive from Drive and extract it into a target directory |
 | `download <path>` | Tar and exfil file/directory from target to Drive |
-| `execute <path>` | Run code on target: auto-detects Python (.py), Shell (.sh), Perl (.pl), Ruby (.rb), Lua (.lua), ELF binaries (.bin/.elf). ELF binaries run filelessly via memfd+fexecve with spoofed process name. |
+| `execute <file_id>` | Run code on target: auto-detects Python (.py), Shell (.sh), Perl (.pl), Ruby (.rb), Lua (.lua), ELF binaries (.bin/.elf). Shebang scripts executed directly. ELF binaries run filelessly via memfd+fexecve with spoofed `[kworker/u:0]` process name. |
 | `dump_browser` | Extract browser passwords, cookies, autofill, history |
 | `dump_token` | Extract Discord authentication tokens |
-| `dump_camera <count>` | Capture webcam photos (1–20) |
-| `screenshot` | Capture desktop screenshot (7-method fallback: X11 → DRM/KMS → Wayland → auto-install) |
-| `dump_audio <seconds>` | Record microphone (1–60 seconds) |
+| `dump_camera <count>` | Capture webcam photos (1 to 20) |
+| `screenshot` | Capture desktop screenshot (7-method fallback: X11, DRM/KMS, Wayland, auto-install) |
+| `dump_audio <seconds>` | Record microphone (1 to 60 seconds) |
 | `dump_wifi` | Extract saved WiFi SSIDs and passwords |
+| `dump_clipboard` | Capture clipboard content; oversized content is auto-uploaded to Drive |
 | `clipboard dump` | Capture clipboard content (X11 + Wayland) |
 | `clipboard clear` | Clear the clipboard buffer |
 | `dump_history` | Collect shell history (bash, zsh, ksh, fish) |
 | `dump_ssh` | Exfil SSH keys and known_hosts |
 | `dump_crypto` | Scan for and exfil crypto wallet files |
 | `dump_mounts` | List mounted filesystems, disk usage, and physical disks |
-| `dump_process` | Enumerate running processes with PID, user, and command line |
-| `dump_netstat` | List active network connections (TCP/UDP, IPv4/IPv6) |
+| `dump_process` | Enumerate running processes with PID, user, and command line; large output auto-uploaded to Drive |
+| `dump_netstat` | List active network connections (TCP/UDP, IPv4/IPv6); large output auto-uploaded to Drive |
 | `dump_traffic <seconds>` | Capture live network traffic via tcpdump (auto-detect interface, auto-install) |
 | `dump_env` | Extract sensitive env vars from /proc, .env files, config files, systemd services |
 | `dump_cloud` | Extract cloud credentials (AWS, GCP/Azure/DigitalOcean/K8s/Docker/Terraform) |
@@ -132,17 +157,24 @@ flowchart TB
 | `keylog dump` | Dump captured keystrokes see [Keylogger](#keylogger) for architecture details |
 | `keylog clear` | Clear the keylog buffer |
 | `stealth` | Check kernel module status (active/inactive) |
-| `hibernate <duration>` | Stop all C2 traffic and processing — 30m, 1h, 5h, 24h, 1d, 5d, 1w. |
-| `takeover` | Switch rootkit to different C2 calendar |
-| `update_token` | Refresh Google Drive API token |
+| `stealth hide_port <port>` | Additionally hide a TCP port from netstat/ss and from tcpdump/Wireshark capture |
+| `stealth unhide_port <port>` | Stop hiding a previously hidden TCP port |
+| `hibernate <duration>` | Stop all C2 traffic and processing: 30m, 1h, 5h, 24h, 1d, 5d, 1w. |
+| `takeover <key> <file_id>` | Switch rootkit to different C2 calendar |
+| `update_token <key> <token>` | Refresh Google Drive API token |
 | `reboot` | Reboot the target machine |
 | `shutdown` | Shut down the target machine |
 
 ### Stealth
-- **Syscall hooking** 16 syscalls intercepted via ftrace before they reach userspace (open, stat, lstat, statx, access, openat, chdir, chmod, chown, getdents64, ptrace, kill, getpriority, newfstatat, finit_module)
+- **Syscall hooking** 15 syscalls intercepted via ftrace before they reach userspace (open, stat, lstat, statx, access, openat, chdir, chmod, chown, getdents64, ptrace, kill, getpriority, newfstatat, finit_module)
 - **File hiding** trie-based prefix matching, both symlink (`/lib/`) and resolved (`/usr/lib/`) paths auto-registered; full-path matching in `getdents64` ensures correct hiding on merged-usr systems
 - **Process hiding** rootkit PID hidden from `/proc`, `ps`, `top`, `kill -0`, `getpriority()`, and brute-force scans
+- **Kernel space resolution** hook addresses for all 26 targets are resolved on the target at load time and passed to the module, so no hardcoded symbol offsets are used
+- **Full ftrace coverage** 26 hooks in total: 15 syscall hooks, 4 network socket enumeration hooks (`tcp4_seq_show`, `tcp6_seq_show`, `udp4_seq_show`, `udp6_seq_show`), the `tpacket_rcv` capture hook, and 6 optional self-defense hooks (`register_kprobe`, `find_module`, `kallsyms_on_each_symbol`, `__x64_sys_bpf`, `__module_address`, `ftrace_free_mem`)
 - **Port hiding** TCP and UDP ports hidden from `netstat`, `ss`, `/proc/net/tcp`, `/proc/net/udp`
+- **Automatic packet-capture hiding** outgoing packets emitted by the implant process are dropped at the `tpacket_rcv` AF_PACKET handler before libpcap can read them. The sender is identified in the tap from the sending process context (`current->pid`/`tgid` vs. `rk_pid`), so no C2 IP or port is needed and the implant's DNS, IPv4, and IPv6 traffic all disappear from Wireshark. The 4-tuple of every implant flow is cached briefly so replies, ACKs, and softirq-context retransmissions are hidden as well. The real network stack is unaffected; only the capture copy is dropped
+- **Port-selective capture hiding** `stealth hide_port <port>` remains available as an operator-selected fallback; TCP packets whose source or destination port is hidden are also dropped at `tpacket_rcv`
+- **tpacket_rcv installed last** the capture hook is optional and installed best-effort after the syscall and self-defense hooks, so kernels without AF_PACKET RX-ring support still load the rest of the module
 - **Module hiding** kernel module hidden from `lsmod`, `/proc/modules`, `/sys/module`
 - **nlink deception** `stat`/`lstat`/`newfstatat`/`statx` results post-corrected for directories containing hidden subdirectories to defeat link-count based directory enumeration; `/sys/module` nlink decremented to conceal module presence
 - **Kallsyms suppression** module symbol table zeroed after hook installation; `/proc/kallsyms` shows zero entries for `xuan`
@@ -164,8 +196,13 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Anti-kprobe** blocks other tools from attaching kprobes to hooked functions
 - **Anti-kallsyms** `kallsyms_on_each_symbol` hook filters module symbols from kernel symbol enumeration; `num_symtab` zeroed to block `/proc/kallsyms` seq_file path
 - **Anti-find_module** returns NULL for the module, invisible to `/sys/module` probes
+- **Anti-__module_address** address-to-module lookups return NULL for any address inside the rootkit, so the module cannot be located from a symbol address
+- **Anti-ftrace_free_mem** suppresses the ftrace module map for the rootkit's own init text, which prevents `[module_name]` residue from appearing in `/proc/kallsyms`
+- **BPF object hiding** the `__x64_sys_bpf` hook makes the module's own BPF programs, maps, links, and BTF objects invisible: `BPF_*_GET_FD_BY_ID` returns `-ENOENT` and `BPF_*_GET_NEXT_ID` steps over hidden IDs, so `bpftool` never sees them
+- **Module list hiding** the module removes itself from the kernel module list and deletes its sysfs kobject, so it is absent from `lsmod`, `/proc/modules`, and `/sys/module`
 - **Log sanitization** all `printk` output removed; `dmesg` contains zero module, rootkit, or keylogger references
 - **Secret unload** proc control requires machine-specific key to unload
+- **Optional hooks** the 6 self-defense symbols are installed best-effort: any symbol missing on the running kernel is simply left uninstalled while the rest of the module stays active
 
 ### Beaconing
 - **Randomized intervals** polls Google Calendar at random intervals between configurable min/max values
@@ -176,20 +213,20 @@ XUAN bypasses all major Linux rootkit detection tools including **chkrootkit** (
 - **Calendar auto-registration** if no matching C2 event is found, the rootkit creates its own event on the shared calendar with its identity
 
 ### Anti-Forensics
-- **Anti-reverse / anti-analysis** dropper detects debuggers (strace, gdb, lldb, ltrace, valgrind via parent process inspection), virtual machines (CPUID hypervisor bit, DMI strings for VMware/VirtualBox/QEMU/KVM/Xen/Hyper-V, VM kernel modules, VM device nodes), and sandbox environments (uptime < 10 min, disk < 20 GB, RAM < 1 GB, single CPU, sandbox hostnames, sandbox users in /etc/passwd). All checks run before any payload extraction — hostile environments trigger immediate silent exit with code 0, leaving no artifacts.
+- **Anti-reverse / anti-analysis** dropper detects debuggers (strace, gdb, lldb, ltrace, valgrind via parent process inspection), virtual machines (CPUID hypervisor bit, DMI strings for VMware/VirtualBox/QEMU/KVM/Xen/Hyper-V, VM kernel modules, VM device nodes), and sandbox environments (uptime < 10 min, disk < 20 GB, RAM < 1 GB, single CPU, sandbox hostnames, sandbox users in /etc/passwd). All checks run before any payload extraction: hostile environments trigger immediate silent exit with code 0, leaving no artifacts.
 - **Machine-specific naming** every artifact name is unique per host, derived from system identifiers via FNV-1a hash of `/etc/machine-id`
 - **Merged-usr support** all hidden paths auto-registered for both `/lib/`/`/bin/`/`/etc/`/`/opt/` and `/usr/lib/`/`/usr/bin/`/`/usr/etc/`/`/usr/opt/` variants; physical paths resolved via `realpath()` and hidden too, works on both traditional and merged-usr systems
 - **Timestamp spoofing** rootkit files cloned from legitimate system file timestamps
 - **ELF corruption** dropper binary has corrupted ELF header to evade analysis
 - **Encrypted module source** kernel module source XOR-encrypted in dropper binary
 - **Binary obfuscation** dropper strings cleaned, UPX signatures removed
-- **Static dropper binary** compiled with `-static` — single ELF with zero dynamic library dependencies; runs on any Linux kernel ≥ 2.6.32 regardless of glibc version
-- **Raw DNS resolver** zero-dependency UDP DNS (`dns.cpp`) reads `/etc/resolv.conf` with 8.8.8.8 → 1.1.1.1 fallback; enables fully static builds without NSS/libnss_dns failures
+- **Static dropper binary** compiled with `-static`: a single ELF with zero dynamic library dependencies; runs on any Linux kernel >= 2.6.32 regardless of glibc version
+- **Raw DNS resolver** zero-dependency UDP DNS (`dns.cpp`) reads `/etc/resolv.conf` with 8.8.8.8 to 1.1.1.1 fallback; enables fully static builds without NSS/libnss_dns failures
 - **Standardized C2 output** all commands produce consistent `[command_name]\n  Key : Value` block format for reliable machine parsing
 
 ### Keylogger
 
-Built directly into the kernel module not a userspace process, not an eBPF program, not a `/dev/input` reader. The keylogger captures keystrokes at the **keyboard notifier** level inside the kernel, before any userspace application (including terminal emulators, password managers, and Wayland compositors) ever sees them.
+The keylogger is built directly into the kernel module: not a userspace process, not an eBPF program, not a `/dev/input` reader. The keylogger captures keystrokes at the **keyboard notifier** level inside the kernel, before any userspace application (including terminal emulators, password managers, and Wayland compositors) ever sees them.
 
 **Capture architecture:**
 - **Keyboard notifier hook** `register_keyboard_notifier()` intercepts every keypress at the input layer *above* the hardware driver but *below* the tty/evdev delivery path. No `/dev/input` polling, no X11/Wayland dependency.
@@ -1289,18 +1326,6 @@ End Date:   2026:06:16 13:57:16
 ```
 </details> 
 
-### Detect It Easy Result:
-
-| Screenshot |
-|-------|
-| ![screenshot](https://github.com/user-attachments/assets/faeaf318-b185-457c-9baf-594015982039) |
-
-### UPX Result:
-
-| Screenshot |
-|-------|
-| ![screenshot](https://github.com/user-attachments/assets/d29bf1c7-7cb0-4cb4-9c97-a97b3f20be2e) |
-
 | Tool Screenshots |
 |-------|
 | ![screenshot](https://github.com/user-attachments/assets/30856815-2310-4748-871b-4ed8027ac00f) |
@@ -1322,7 +1347,7 @@ End Date:   2026:06:16 13:57:16
 **Supported Targets**
 
   * Architecture    :  x86_64 only
-  * Linux Kernel    :  4.17.x – 7.x
+  * Linux Kernel    :  4.17.x to 7.x
 
 ## Setup (Google Calendar C2)
 
@@ -1472,21 +1497,24 @@ End Date:   2026:06:16 13:57:16
 
 ### Tool Structure:
 After completing all steps, your directory should contain:
-```code    
+```text
 DEDSEC_XUAN/
 ├── c2_creds.json        # Service account key for Calendar C2
 ├── data_exfil.json      # OAuth credentials for Drive exfiltration
-└── dedsec_xuan          # dedsec tool (controller)
+├── dedsec_xuan.py       # dedsec tool (controller)
+└── src/                 # implant, dropper and kernel module sources
 ```
 
 ### INSTALLATION
-    git clone https://github.com/0xbitx/DEDSEC_XUAN.git
-    cd DEDSEC_XUAN
-    sudo pip3 install tabulate
-    sudo apt install upx-ucl
-    chmod +x dedsec_xuan
-    sudo ./dedsec_xuan
-    
+```bash
+git clone https://github.com/0xbitx/DEDSEC_XUAN.git
+cd DEDSEC_XUAN
+sudo pip3 install tabulate
+sudo apt install upx-ucl
+chmod +x dedsec_xuan.py
+sudo ./dedsec_xuan.py
+```
+
 ### TESTED ON FOLLOWING
 * Kali Linux 
 * Parrot OS
